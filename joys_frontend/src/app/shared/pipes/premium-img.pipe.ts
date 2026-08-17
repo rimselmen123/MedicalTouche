@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { environment } from '../../../environments/environment';
 
 @Pipe({
-    name: 'premiumImg'
+    name: 'premiumImg',
+    standalone: false
 })
 export class PremiumImgPipe implements PipeTransform {
     transform(value: string | null | undefined): string {
