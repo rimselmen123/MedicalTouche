@@ -1,0 +1,82 @@
+<div class="page-container">
+
+    <div class="header-split reveal">
+        <app-page-header title="Réclamations" subtitle="Centre de support et suivi client."></app-page-header>
+
+        <div class="filter-wrapper">
+            <label class="filter-label">Affichage :</label>
+            <div class="select-container">
+                <select [(ngModel)]="statusFilter" (change)="onFilterChange()" class="minimal-select">
+                    <option value="">Tous les tickets</option>
+                    <option value="Open">Ouverts</option>
+                    <option value="InProgress">En cours</option>
+                    <option value="Resolved">Résolus</option>
+                    <option value="Closed">Fermés</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="loading" class="loading-wrapper">
+        <app-loading label="Chargement des tickets..."></app-loading>
+    </div>
+
+    <div class="table-container reveal delay-1" *ngIf="!loading">
+        <table class="inbox-table">
+            <thead>
+                <tr>
+                    <th class="th-id">Ticket</th>
+                    <th class="th-main">Sujet & Client</th>
+                    <th class="th-date">Date</th>
+                    <th class="th-status">État</th>
+                    <th class="th-action text-right">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let rec of reclamations; let i = index" class="table-row"
+                    [style.animation-delay]="(i * 30) + 'ms'">
+
+                    <td class="td-id">
+                        <span class="id-badge">#{{ rec.id }}</span>
+                    </td>
+
+                    <td class="td-main">
+                        <div class="ticket-info">
+                            <span class="ticket-subject">{{ rec.subject }}</span>
+                            <span class="ticket-client">De : {{ rec.fullName || 'Client Anonyme' }}</span>
+                        </div>
+                    </td>
+
+                    <td class="td-date">
+                        {{ rec.createdAt | date:'mediumDate' }}
+                    </td>
+
+                    <td>
+                        <span class="status-indicator" [ngClass]="rec.status.toLowerCase()">
+                            <span class="dot"></span>
+                            {{ rec.status }}
+                        </span>
+                    </td>
+
+                    <td class="text-right">
+                        <a [routerLink]="['/admin/reclamations', rec.id]" class="btn-action">
+                            <span>Gérer</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="empty-state" *ngIf="reclamations.length === 0">
+            <div class="empty-content">
+                <span class="icon">☺</span>
+                <p>Aucune réclamation à traiter. Tout va bien !</p>
+            </div>
+        </div>
+    </div>
+
+</div>

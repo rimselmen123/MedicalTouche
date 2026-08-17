@@ -1,0 +1,236 @@
+<form [formGroup]="form" (ngSubmit)="submit()">
+<div class="wizard-page">
+
+    <!-- Header -->
+    <div class="wizard-header reveal">
+        <div class="wizard-header-top">
+            <a routerLink="/admin/products" class="back-link">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Produits
+            </a>
+            <div class="wizard-header-actions">
+                <a routerLink="/admin/products" class="wiz-btn wiz-btn--ghost">Annuler</a>
+                <button type="button" class="wiz-btn wiz-btn--ghost" (click)="prevStep()" *ngIf="currentStep > 1">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                    Précédent
+                </button>
+                <button type="button" class="wiz-btn wiz-btn--primary" (click)="nextStep()" *ngIf="currentStep < totalSteps">
+                    Suivant
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </button>
+                <button type="submit" class="wiz-btn wiz-btn--success" [disabled]="loading" *ngIf="currentStep === totalSteps">
+                    {{ loading ? 'Sauvegarde...' : (isEdit ? 'Mettre à jour' : 'Créer le produit') }}
+                </button>
+            </div>
+        </div>
+        <h1 class="wizard-title">{{ isEdit ? 'Modifier le produit' : 'Nouveau produit' }}</h1>
+    </div>
+
+    <!-- Stepper -->
+    <div class="stepper reveal delay-1">
+        <div *ngFor="let step of steps; let i = index; let last = last"
+             class="stepper-item"
+             [class.active]="currentStep === step.num"
+             [class.done]="currentStep > step.num"
+             (click)="goToStep(step.num)">
+            <div class="stepper-circle">
+                <span *ngIf="currentStep <= step.num">{{ step.num }}</span>
+                <svg *ngIf="currentStep > step.num" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+            </div>
+            <div class="stepper-text">
+                <span class="stepper-label">{{ step.title }}</span>
+                <span class="stepper-desc">{{ step.desc }}</span>
+            </div>
+            <div class="stepper-line" *ngIf="!last"></div>
+        </div>
+    </div>
+
+    <!-- Wizard Body -->
+    <div class="wizard-body reveal delay-2">
+
+        <!-- STEP 1: Informations -->
+        <div class="wizard-step" *ngIf="currentStep === 1">
+            <div class="step-card">
+                <div class="step-card-header">
+                    <h2>Informations du produit</h2>
+                    <p>Définissez l'identité de votre produit.</p>
+                </div>
+
+                <div class="field">
+                    <label class="field-label">Titre du produit <span class="req">*</span></label>
+                    <input formControlName="title" type="text" class="field-input field-input--lg"
+                           placeholder="Ex: Robe Élégante Été 2026">
+                </div>
+
+                <div class="field">
+                    <label class="field-label">Description <span class="req">*</span></label>
+                    <textarea formControlName="description" rows="4" class="field-input"
+                              placeholder="Décrivez votre produit en détail..."></textarea>
+                </div>
+
+                <div class="field">
+                    <label class="field-label">Catégorie <span class="req">*</span></label>
+                    <div class="field-select-wrap">
+                        <select formControlName="categoryId" class="field-input">
+                            <option [ngValue]="null" disabled>Choisir une catégorie</option>
+                            <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="toggle-row">
+                        <div>
+                            <span class="field-label">Visible sur la boutique</span>
+                            <p class="field-hint">Le produit sera affiché aux clients.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" formControlName="isActive">
+                            <span class="switch-track"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 2: Médias -->
+        <div class="wizard-step" *ngIf="currentStep === 2">
+            <div class="step-card">
+                <div class="step-card-header">
+                    <h2>Photos du produit</h2>
+                    <p>Ajoutez des images de qualité pour attirer les clients.</p>
+                </div>
+
+                <!-- Existing images (edit mode) -->
+                <div *ngIf="isEdit && existingImages.length > 0" class="field">
+                    <label class="field-label">Images actuelles</label>
+                    <div class="media-grid">
+                        <div class="media-card" *ngFor="let img of existingImages">
+                            <div class="media-preview">
+                                <img [src]="getExistingImageSrc(img.id)" alt="image" loading="lazy">
+                                <span class="media-badge" *ngIf="img.isCover">Cover</span>
+                            </div>
+                            <div class="media-actions">
+                                <button type="button" class="media-btn" [disabled]="img.isCover"
+                                        (click)="setAsCover(img.id)">
+                                    Cover
+                                </button>
+                                <button type="button" class="media-btn media-btn--danger"
+                                        (click)="deleteExistingImage(img.id)">
+                                    Supprimer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upload zone -->
+                <div class="field">
+                    <label class="field-label">{{ isEdit ? 'Ajouter des images' : 'Images du produit' }}</label>
+                    <label class="upload-zone">
+                        <input type="file" (change)="onFilesSelected($event)" accept="image/*" multiple class="upload-input">
+                        <div class="upload-content">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="17 8 12 3 7 8"/>
+                                <line x1="12" y1="3" x2="12" y2="15"/>
+                            </svg>
+                            <span class="upload-text">Glissez vos images ici ou <strong>parcourir</strong></span>
+                            <span class="upload-hint">JPG, PNG, WebP - Max 5 Mo par image - Sélection multiple possible</span>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Selected files preview -->
+                <div class="field" *ngIf="selectedFiles.length > 0">
+                    <label class="field-label">{{ selectedFiles.length }} image(s) sélectionnée(s)</label>
+                    <div class="media-grid">
+                        <div class="media-card" *ngFor="let f of selectedFiles; let i = index">
+                            <div class="media-preview">
+                                <img [src]="f | fileUrl" alt="preview">
+                                <span class="media-badge" *ngIf="!isEdit && coverIndex === i">Cover</span>
+                            </div>
+                            <div class="media-actions">
+                                <button type="button" class="media-btn" *ngIf="!isEdit"
+                                        [disabled]="coverIndex === i"
+                                        (click)="setCreateCoverIndex(i)">
+                                    {{ coverIndex === i ? 'Cover' : 'Définir cover' }}
+                                </button>
+                                <button type="button" class="media-btn media-btn--danger"
+                                        (click)="removeSelectedFile(i)">
+                                    Retirer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 3: Tarification -->
+        <div class="wizard-step" *ngIf="currentStep === 3">
+            <div class="step-card">
+                <div class="step-card-header">
+                    <h2>Tarification & Options</h2>
+                    <p>Définissez le prix et les paramètres avancés.</p>
+                </div>
+
+                <div class="price-grid">
+                    <div class="field">
+                        <label class="field-label">Prix (TND) <span class="req">*</span></label>
+                        <input type="number" formControlName="price" class="field-input field-input--price"
+                               placeholder="0.000" step="0.001">
+                    </div>
+                    <div class="field">
+                        <label class="field-label">Ancien prix (barré)</label>
+                        <input type="number" formControlName="oldPrice" class="field-input"
+                               placeholder="Optionnel" step="0.001">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="field-label">Stock disponible</label>
+                    <input type="number" formControlName="stockQuantity" class="field-input"
+                           placeholder="Quantité en stock">
+                </div>
+
+                <div class="options-section">
+                    <div class="toggle-row">
+                        <div>
+                            <span class="field-label">Article en vedette</span>
+                            <p class="field-hint">Apparaîtra dans la section "Coups de coeur".</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" formControlName="isFeatured">
+                            <span class="switch-track"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-row">
+                        <div>
+                            <span class="field-label">Fabrication sur commande</span>
+                            <p class="field-hint">Le produit sera fabriqué après la commande.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" formControlName="isMadeToOrder">
+                            <span class="switch-track"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+</form>
+
+<div *ngIf="loading" class="loading-overlay"></div>

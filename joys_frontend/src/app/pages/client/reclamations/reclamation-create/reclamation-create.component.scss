@@ -1,0 +1,218 @@
+/* ================================================================
+   RECLAMATION CREATE — Glassmorphism Luxury Design
+   ================================================================ */
+
+:host {
+    display: block;
+    min-height: 80vh;
+    background: linear-gradient(165deg, #f8f6f3 0%, #f0ece6 40%, #e8e4de 100%);
+}
+
+.page-container {
+    padding-bottom: 120px;
+}
+
+.container {
+    width: min(100%, 800px);
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* --- Header --- */
+.header-center {
+    text-align: center;
+    padding: 60px 0 48px;
+}
+
+.page-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3rem);
+    color: #1a1a1a;
+    margin: 0 0 16px 0;
+    line-height: 1;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+}
+
+.page-subtitle {
+    font-family: sans-serif;
+    font-size: 1.05rem;
+    color: #888;
+    margin: 0;
+}
+
+/* --- Glass Form Card --- */
+.form-wrapper {
+    margin: 0 auto;
+}
+
+.stationery-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 56px;
+    border-radius: 18px;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    box-shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.06);
+
+    @media (max-width: 600px) {
+        padding: 32px 22px;
+    }
+}
+
+/* --- Inputs --- */
+.form-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+
+    @media (max-width: 600px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.form-group {
+    position: relative;
+}
+
+.input-label {
+    display: block;
+    font-family: sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #b8956a;
+    margin-bottom: 10px;
+}
+
+.input-minimal {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.6);
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: #1a1a1a;
+    outline: none;
+    transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s;
+
+    &::placeholder {
+        color: #c0c0c0;
+        font-weight: 300;
+    }
+
+    &:focus {
+        border-color: #b8956a;
+        box-shadow: 0 0 0 3px rgba(184, 149, 106, 0.1);
+    }
+}
+
+.text-area {
+    line-height: 1.7;
+    resize: vertical;
+    min-height: 130px;
+    border-radius: 14px;
+}
+
+/* --- Actions --- */
+.form-actions {
+    margin-top: 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    @media (max-width: 600px) {
+        flex-direction: column-reverse;
+        gap: 20px;
+    }
+}
+
+.btn-text {
+    font-family: sans-serif;
+    font-size: 0.9rem;
+    color: #999;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: all 0.2s;
+
+    &:hover {
+        color: #1a1a1a;
+        border-bottom-color: #1a1a1a;
+    }
+}
+
+.btn-primary {
+    background: #1a1a1a;
+    color: white;
+    border: none;
+    padding: 16px 40px;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 8px 24px -4px rgba(26, 26, 26, 0.2);
+    letter-spacing: 0.05em;
+
+    &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 32px -4px rgba(26, 26, 26, 0.3);
+        background: #000;
+    }
+
+    &:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+
+    &.btn-loading {
+        opacity: 0.7;
+    }
+}
+
+/* --- Footer Note --- */
+.footer-note {
+    text-align: center;
+    margin-top: 36px;
+
+    p {
+        font-size: 0.85rem;
+        color: #b8956a;
+        font-style: italic;
+    }
+}
+
+/* --- Animations --- */
+.reveal {
+    opacity: 0;
+    animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.delay-1 {
+    animation-delay: 0.15s;
+}
+
+.delay-2 {
+    animation-delay: 0.3s;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(28px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

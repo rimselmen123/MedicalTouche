@@ -1,0 +1,40 @@
+<div class="product-card" (click)="onCardClick()">
+
+    <!-- Image Section -->
+    <div class="card-media">
+        <img [src]="gallery[currentIndex] | premiumImg" [alt]="article.title" class="product-img" loading="lazy">
+
+        <!-- Image Navigation -->
+        <div class="media-controls" *ngIf="hasMultipleImages">
+            <button class="ctrl-btn" (click)="prevImage($event)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M15 18l-6-6 6-6" />
+                </svg>
+            </button>
+            <button class="ctrl-btn" (click)="nextImage($event)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M9 18l6-6-6-6" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Dots -->
+        <div class="slider-dots" *ngIf="hasMultipleImages">
+            <span *ngFor="let _ of gallery; let i = index" class="dot" [class.active]="currentIndex === i"></span>
+        </div>
+
+        <!-- Promo Badge -->
+        <span class="badge-promo" *ngIf="article.oldPrice">-{{ getDiscount() }}%</span>
+    </div>
+
+    <!-- Info Section -->
+    <div class="card-info">
+        <span class="category-label">{{ article.categoryName || 'Collection' }}</span>
+        <h3 class="title">{{ article.title }}</h3>
+        <div class="price-row">
+            <span class="price">{{ article.price | number:'1.2-2' }} <small>TND</small></span>
+            <span *ngIf="article.oldPrice" class="old-price">{{ article.oldPrice | number:'1.2-2' }}</span>
+        </div>
+    </div>
+
+</div>

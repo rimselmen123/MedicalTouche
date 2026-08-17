@@ -1,0 +1,91 @@
+<div class="split-screen-container">
+
+    <div class="visual-side">
+        <div class="noise-overlay"></div>
+        <div class="brand-content reveal">
+            <a routerLink="/" class="brand-logo">Joy's.</a>
+            <h1 class="brand-heading">
+                Bienvenue<br>
+                <span class="italic">chez Joy's.</span>
+            </h1>
+            <p class="brand-text">
+                Rejoignez notre communauté et profitez des meilleures offres, d'un service personnalisé et d'une livraison rapide partout en Tunisie.
+            </p>
+        </div>
+        <div class="brand-footer">
+            <span>© 2026 Joy's</span>
+        </div>
+    </div>
+
+    <div class="form-side">
+        <div class="form-wrapper reveal delay-1">
+
+            <div class="form-header">
+                <h2>Créer un compte</h2>
+                <p>Veuillez renseigner vos informations personnelles.</p>
+            </div>
+
+            <form [formGroup]="form" (ngSubmit)="submit()">
+
+                <div class="input-grid">
+                    <div class="form-group">
+                        <label for="firstName" class="input-label">Prénom</label>
+                        <input id="firstName" type="text" formControlName="firstName" class="input-luxe"
+                            placeholder="Votre prénom">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName" class="input-label">Nom</label>
+                        <input id="lastName" type="text" formControlName="lastName" class="input-luxe"
+                            placeholder="Votre nom">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone" class="input-label">Téléphone</label>
+                    <input id="phone" type="tel" formControlName="phone" class="input-luxe"
+                        placeholder="+216 00 000 000">
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="input-label">Adresse Email</label>
+                    <input id="email" type="email" formControlName="email" class="input-luxe"
+                        placeholder="exemple@email.com">
+
+                    <div class="error-msg" *ngIf="form.get('email')?.touched && form.get('email')?.invalid">
+                        Email requis ou invalide.
+                    </div>
+                </div>
+
+                <div class="input-grid">
+                    <div class="form-group">
+                        <label for="password" class="input-label">Mot de passe</label>
+                        <input id="password" type="password" formControlName="password" class="input-luxe"
+                            placeholder="••••••••">
+                        <p class="hint">Min. 6 caractères avec un chiffre</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm" class="input-label">Confirmation</label>
+                        <input id="confirm" type="password" formControlName="confirmPassword" class="input-luxe"
+                            placeholder="••••••••">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn-submit" type="submit" [disabled]="loading || form.invalid">
+                        <span *ngIf="!loading">Rejoindre le Club</span>
+                        <span *ngIf="loading" class="loading-state">
+                            <span class="spinner-dot"></span> Création...
+                        </span>
+                    </button>
+                </div>
+
+                <div class="auth-footer">
+                    <span>Déjà membre ?</span>
+                    <a routerLink="/auth/login" class="link-login">Se connecter</a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>

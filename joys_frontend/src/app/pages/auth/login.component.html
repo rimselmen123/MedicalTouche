@@ -1,0 +1,56 @@
+<div class="auth-page">
+
+    <div class="noise-overlay"></div>
+
+    <a routerLink="/" class="back-home reveal">
+        <span class="arrow">←</span> Retour à la boutique
+    </a>
+
+    <div class="auth-container">
+        <div class="auth-card reveal delay-1">
+
+            <div class="auth-header">
+                <span class="brand-signature">Joy's.</span>
+                <h1 class="auth-title">Connexion</h1>
+                <p class="auth-subtitle">Ravis de vous revoir. Accédez à votre espace privilégié.</p>
+            </div>
+
+            <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
+
+                <div class="form-group">
+                    <label for="email" class="input-label">Adresse Email</label>
+                    <input id="email" type="email" formControlName="email" class="input-luxe"
+                        placeholder="votre@email.com">
+
+                    <div class="error-msg" *ngIf="form.get('email')?.touched && form.get('email')?.invalid">
+                        Veuillez entrer une adresse email valide.
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="label-split">
+                        <label for="password" class="input-label">Mot de passe</label>
+                        <a routerLink="/auth/forgot-password" class="forgot-link">Oublié ?</a>
+                    </div>
+                    <input id="password" type="password" formControlName="password" class="input-luxe"
+                        placeholder="••••••••">
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn-submit" type="submit" [disabled]="loading || form.invalid">
+                        <span *ngIf="!loading">Se Connecter</span>
+                        <span *ngIf="loading" class="loading-state">
+                            <span class="spinner-dot"></span> Connexion...
+                        </span>
+                    </button>
+                </div>
+
+                <div class="auth-footer">
+                    <span class="text-muted">Nouveau client ?</span>
+                    <a routerLink="/auth/register" class="link-register">Créer un compte</a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

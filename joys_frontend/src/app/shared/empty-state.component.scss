@@ -1,0 +1,111 @@
+:host {
+    display: block;
+    width: 100%;
+}
+
+.empty-state-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 20px;
+    background-color: transparent;
+    /* Fond transparent pour se fondre partout */
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* --- 1. ICON / EMOJI --- */
+.icon-circle {
+    width: 100px;
+    height: 100px;
+    background-color: #f5f5f5;
+    /* Gris très pâle */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 32px;
+
+    /* Animation de lévitation douce */
+    animation: float 6s ease-in-out infinite;
+}
+
+.emoji-content {
+    font-size: 3rem;
+    /* Gros emoji */
+    line-height: 1;
+    display: block;
+    /* Optionnel : filtre noir et blanc pour le purisme, 
+     retire cette ligne si tu veux la couleur de l'emoji */
+    filter: grayscale(0.2);
+}
+
+/* --- 2. TYPOGRAPHY --- */
+.state-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #111;
+    margin: 0 0 16px 0;
+    letter-spacing: -0.02em;
+}
+
+.state-desc {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.6;
+    max-width: 320px;
+    /* Limite la largeur pour la lisibilité */
+    margin: 0 auto 32px auto;
+}
+
+/* --- 3. ACTIONS --- */
+.action-slot {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    width: 100%;
+}
+
+/* --- ANIMATIONS --- */
+
+/* Lévitation */
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    /* Monte doucement */
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+/* Apparition en cascade */
+.reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.delay-1 {
+    animation-delay: 0.1s;
+}
+
+.delay-2 {
+    animation-delay: 0.2s;
+}
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

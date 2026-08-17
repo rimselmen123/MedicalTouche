@@ -1,0 +1,77 @@
+<div class="admin-shell" [class.sidebar-open]="sidebarOpen">
+
+    <div class="sidebar-backdrop" (click)="closeSidebar()"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-head">
+            <a routerLink="/admin" class="sidebar-logo">
+                <img src="assets/joyslogo.jpg" alt="Joy's" class="sidebar-logo-img">
+                <div class="sidebar-logo-text">
+                    <span class="sidebar-brand">Joy's</span>
+                    <span class="sidebar-badge">Admin</span>
+                </div>
+            </a>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div *ngFor="let section of menuSections" class="nav-section">
+                <span class="nav-section-title">{{ section.title }}</span>
+                <a *ngFor="let item of section.items"
+                   [routerLink]="item.route"
+                   [routerLinkActiveOptions]="{ exact: item.exactMatch || false }"
+                   routerLinkActive="active"
+                   (click)="closeSidebar()"
+                   class="nav-item">
+                    <span class="nav-item-text">{{ item.label }}</span>
+                    <span class="nav-item-dot"></span>
+                </a>
+            </div>
+        </nav>
+
+        <a routerLink="/" class="sidebar-shop-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            Voir la boutique
+        </a>
+
+        <div class="sidebar-foot" *ngIf="user$ | async as user">
+            <div class="sidebar-user">
+                <div class="user-avatar">{{ user.email?.charAt(0).toUpperCase() }}</div>
+                <div class="user-info">
+                    <span class="user-email">{{ user.email }}</span>
+                    <button (click)="logout()" class="user-logout">Se déconnecter</button>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main-area">
+        <!-- Mobile Top Bar -->
+        <header class="top-bar">
+            <button class="top-bar-menu" (click)="toggleSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <line x1="3" y1="12" x2="21" y2="12"/>
+                    <line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+            </button>
+            <span class="top-bar-brand">Joy's Admin</span>
+            <a routerLink="/" class="top-bar-home">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+            </a>
+        </header>
+
+        <!-- Content -->
+        <main class="main-content">
+            <router-outlet></router-outlet>
+        </main>
+    </div>
+
+</div>

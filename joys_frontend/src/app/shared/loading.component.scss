@@ -1,0 +1,90 @@
+:host {
+    display: block;
+    width: 100%;
+}
+
+.loader-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+/* --- SPINNER SVG --- */
+.spinner {
+    width: 48px;
+    height: 48px;
+    animation: rotate 2s linear infinite;
+    transform-origin: center center;
+}
+
+.circular {
+    height: 100%;
+    width: 100%;
+    display: block;
+}
+
+.path {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+    stroke: #111;
+    /* Noir Profond */
+    stroke-linecap: round;
+    /* Bords arrondis pour la douceur */
+
+    /* L'animation complexe qui donne l'effet "Luxe" */
+    animation: dash 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* --- TYPOGRAPHIE --- */
+.label {
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    /* Espacement large = Luxe */
+    color: #999;
+
+    /* Pulsation lente */
+    animation: pulse 1.5s ease-in-out infinite alternate;
+}
+
+/* --- ANIMATIONS --- */
+
+/* Rotation globale du conteneur */
+@keyframes rotate {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Le trait qui grandit et rétrécit */
+@keyframes dash {
+    0% {
+        stroke-dasharray: 1, 200;
+        stroke-dashoffset: 0;
+    }
+
+    50% {
+        stroke-dasharray: 89, 200;
+        stroke-dashoffset: -35px;
+    }
+
+    100% {
+        stroke-dasharray: 89, 200;
+        stroke-dashoffset: -124px;
+    }
+}
+
+/* Opacité du texte */
+@keyframes pulse {
+    from {
+        opacity: 0.6;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

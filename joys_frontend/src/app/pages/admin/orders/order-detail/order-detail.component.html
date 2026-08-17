@@ -1,0 +1,191 @@
+<div class="page-wrap" *ngIf="!loading && order">
+
+    <!-- Back -->
+    <a routerLink="/admin/orders" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Commandes
+    </a>
+
+    <!-- Title row -->
+    <div class="title-row">
+        <div>
+            <h1 class="order-num">#{{ order.orderNumber }}</h1>
+            <span class="order-date">{{ order.createdAt | date:'dd MMMM yyyy, HH:mm' }}</span>
+        </div>
+        <span class="status-chip" [ngClass]="isCanceled() ? 'canceled' : steps[currentStep()]?.css">
+            {{ statusLabel(order.status) }}
+        </span>
+    </div>
+
+    <!-- ═══ PROGRESS STEPPER ═══ -->
+    <div class="stepper" *ngIf="!isCanceled()">
+        <div *ngFor="let step of steps; let i = index"
+             class="step"
+             [class.done]="i < currentStep()"
+             [class.active]="i === currentStep()"
+             [class.future]="i > currentStep()">
+            <div class="step-dot">
+                <svg *ngIf="i < currentStep()" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <span *ngIf="i >= currentStep()">{{ i + 1 }}</span>
+            </div>
+            <span class="step-label">{{ step.label }}</span>
+        </div>
+    </div>
+
+    <div class="canceled-banner" *ngIf="isCanceled()">
+        Cette commande a été annulée.
+    </div>
+
+    <!-- ═══ ACTION BAR ═══ -->
+    <div class="action-bar" *ngIf="getNextAction() || canCancel() || canRefund()">
+        <button *ngIf="getNextAction() as action" class="btn-primary" (click)="advance()">
+            {{ action.label }}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+        </button>
+        <button *ngIf="canRefund()" class="btn-refund" (click)="refund()">
+            Rembourser
+        </button>
+        <button *ngIf="canCancel()" class="btn-danger" (click)="cancel()">
+            Annuler la commande
+        </button>
+    </div>
+
+    <!-- ═══ CONTENT GRID ═══ -->
+    <div class="content-grid">
+
+        <!-- LEFT: Articles -->
+        <div class="main-col">
+
+            <section class="card">
+                <h2 class="card-title">Articles ({{ order.items?.length || 0 }})</h2>
+                <div class="items-list">
+                    <div *ngFor="let item of order.items" class="item-row">
+                        <div class="item-img">
+                            <img [src]="item.imageUrl | premiumImg" [alt]="item.name">
+                        </div>
+                        <div class="item-info">
+                            <span class="item-name">{{ item.name }}</span>
+                            <span class="item-variant" *ngIf="item.variantName">{{ item.variantName }}</span>
+                        </div>
+                        <span class="item-qty">x{{ item.quantity }}</span>
+                        <span class="item-price">{{ item.unitPrice * item.quantity | number:'1.2-2' }} TND</span>
+                    </div>
+                </div>
+
+                <!-- Totals -->
+                <div class="totals">
+                    <div class="total-row">
+                        <span>Sous-total</span>
+                        <span>{{ order.subtotal | number:'1.2-2' }} TND</span>
+                    </div>
+                    <div class="total-row" *ngIf="order.deliveryFee">
+                        <span>Livraison</span>
+                        <span>{{ order.deliveryFee | number:'1.2-2' }} TND</span>
+                    </div>
+                    <div class="total-row" *ngIf="order.discountTotal">
+                        <span>Réduction</span>
+                        <span>-{{ order.discountTotal | number:'1.2-2' }} TND</span>
+                    </div>
+                    <div class="total-row total-final">
+                        <span>Total</span>
+                        <span>{{ order.total | number:'1.2-2' }} TND</span>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- RIGHT: Sidebar -->
+        <div class="side-col">
+
+            <!-- Client -->
+            <section class="card">
+                <h2 class="card-title">Client</h2>
+                <div class="info-row" *ngIf="order.customerEmail || order.shippingAddress?.fullName">
+                    <span class="info-label">Nom</span>
+                    <span class="info-value">{{ order.shippingAddress?.fullName || order.customerFullName || '—' }}</span>
+                </div>
+                <div class="info-row" *ngIf="order.customerEmail">
+                    <span class="info-label">Email</span>
+                    <span class="info-value">{{ order.customerEmail }}</span>
+                </div>
+                <div class="info-row" *ngIf="order.shippingAddress?.phone">
+                    <span class="info-label">Tél</span>
+                    <span class="info-value">{{ order.shippingAddress.phone }}</span>
+                </div>
+            </section>
+
+            <!-- Shipping -->
+            <section class="card" *ngIf="order.shippingAddress">
+                <h2 class="card-title">Adresse de livraison</h2>
+                <p class="addr">{{ order.shippingAddress?.line1 }}</p>
+                <p class="addr" *ngIf="order.shippingAddress?.line2">{{ order.shippingAddress.line2 }}</p>
+                <p class="addr">{{ order.shippingAddress?.postalCode }} {{ order.shippingAddress?.city }}</p>
+                <p class="addr" *ngIf="order.shippingAddress?.governorate">{{ order.shippingAddress.governorate }}</p>
+            </section>
+
+            <!-- Payment & Fees -->
+            <section class="card">
+                <h2 class="card-title">Paiement</h2>
+                <div class="info-row">
+                    <span class="info-label">Mode</span>
+                    <span class="info-value">{{ paymentMethodLabel(order.paymentMethod) }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">État</span>
+                    <span class="info-value">{{ paymentLabel(order.paymentStatus) }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Livraison</span>
+                    <div class="info-editable">
+                        <span>{{ order.deliveryFee | number:'1.2-2' }} TND</span>
+                        <button class="edit-btn" (click)="updateDeliveryFee()">Modifier</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Note client -->
+            <section class="card" *ngIf="order.customerNote">
+                <h2 class="card-title">Note du client</h2>
+                <p class="note">"{{ order.customerNote }}"</p>
+            </section>
+
+            <!-- Note admin -->
+            <section class="card">
+                <h2 class="card-title">Note interne</h2>
+                <textarea class="admin-note-input"
+                          [(ngModel)]="adminNoteInput"
+                          placeholder="Note visible uniquement par l'admin..."
+                          rows="3"></textarea>
+                <button class="btn-save-note" (click)="saveAdminNote()">Enregistrer</button>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- ═══ STATUS HISTORY ═══ -->
+    <section class="card history-card" *ngIf="order.statusHistory && order.statusHistory.length > 0">
+        <h2 class="card-title">Historique</h2>
+        <div class="timeline">
+            <div *ngFor="let h of order.statusHistory" class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <span class="timeline-status">
+                        {{ statusLabel(h.fromStatus) }} → {{ statusLabel(h.toStatus) }}
+                    </span>
+                    <span class="timeline-note" *ngIf="h.note">{{ h.note }}</span>
+                    <span class="timeline-date">{{ h.createdAt | date:'dd/MM/yy HH:mm' }}</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<app-loading *ngIf="loading"></app-loading>

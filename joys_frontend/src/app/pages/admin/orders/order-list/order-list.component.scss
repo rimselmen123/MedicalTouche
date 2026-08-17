@@ -1,0 +1,322 @@
+/* ================================================================
+   ADMIN ORDERS LIST — Ultra clean, 4-status design
+   ================================================================ */
+:host { display: block; }
+
+.page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+}
+
+/* ── Header ── */
+.page-head {
+    margin-bottom: 28px;
+}
+
+.page-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #111;
+    margin: 0 0 4px;
+}
+
+.page-sub {
+    font-size: 0.875rem;
+    color: #888;
+    margin: 0;
+}
+
+/* ── Filters ── */
+.filters-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.filter-pills {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.pill {
+    padding: 8px 18px;
+    border: 1px solid #e5e5e5;
+    border-radius: 100px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #666;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: inherit;
+
+    &:hover {
+        border-color: #111;
+        color: #111;
+    }
+
+    &.active {
+        background: #111;
+        border-color: #111;
+        color: #fff;
+    }
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    background: #fff;
+    min-width: 240px;
+    transition: border-color 0.2s;
+
+    &:focus-within {
+        border-color: #111;
+    }
+
+    svg { color: #aaa; flex-shrink: 0; }
+
+    input {
+        border: none;
+        outline: none;
+        font-size: 0.85rem;
+        color: #333;
+        background: transparent;
+        width: 100%;
+        font-family: inherit;
+
+        &::placeholder { color: #bbb; }
+    }
+}
+
+/* ── Table ── */
+.orders-table {
+    background: #fff;
+    border-radius: 14px;
+    border: 1px solid #f0f0f0;
+    overflow: hidden;
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    thead tr {
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    th {
+        text-align: left;
+        padding: 14px 20px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #999;
+        background: #fafafa;
+    }
+
+    td {
+        padding: 16px 20px;
+        border-bottom: 1px solid #f8f8f8;
+        font-size: 0.9rem;
+        color: #333;
+        vertical-align: middle;
+    }
+
+    tbody tr {
+        transition: background 0.15s;
+
+        &:hover { background: #fcfcfc; }
+        &:last-child td { border-bottom: none; }
+    }
+}
+
+.order-ref {
+    font-weight: 700;
+    color: #111;
+    text-decoration: none;
+    display: block;
+
+    &:hover { color: var(--primary, #D4163C); opacity: 1; }
+}
+
+.order-date {
+    display: block;
+    font-size: 0.75rem;
+    color: #aaa;
+    margin-top: 2px;
+}
+
+.client-name {
+    font-weight: 500;
+    color: #444;
+}
+
+.order-total {
+    font-weight: 700;
+    color: #111;
+
+    small { font-weight: 400; color: #999; font-size: 0.75rem; }
+}
+
+/* ── Status Chips (4 states) ── */
+.status-chip {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 100px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+
+    &.pending {
+        background: #FFF7ED;
+        color: #C2410C;
+    }
+
+    &.preparing {
+        background: #EFF6FF;
+        color: #1D4ED8;
+    }
+
+    &.shipped {
+        background: #F5F3FF;
+        color: #6D28D9;
+    }
+
+    &.delivered {
+        background: #F0FDF4;
+        color: #15803D;
+    }
+
+    &.canceled {
+        background: #F9FAFB;
+        color: #9CA3AF;
+        text-decoration: line-through;
+    }
+}
+
+/* ── Action Buttons ── */
+.th-actions { text-align: right; }
+
+.td-actions {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.btn-advance {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 16px;
+    background: #111;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+
+    &:hover { background: #333; }
+}
+
+.btn-cancel {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    border: 1px solid #e5e5e5;
+    background: #fff;
+    color: #999;
+    cursor: pointer;
+    margin-left: 6px;
+    transition: all 0.15s;
+
+    &:hover {
+        border-color: #ef4444;
+        color: #ef4444;
+        background: #fef2f2;
+    }
+}
+
+.btn-view {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    border: 1px solid #e5e5e5;
+    color: #999;
+    text-decoration: none;
+    margin-left: 6px;
+    transition: all 0.15s;
+
+    &:hover { border-color: #111; color: #111; opacity: 1; }
+}
+
+/* ── Empty & Loading ── */
+.loading-state {
+    padding: 60px 0;
+    text-align: center;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 0;
+    color: #aaa;
+    font-size: 0.95rem;
+}
+
+/* ── Pagination ── */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-top: 28px;
+}
+
+.pg-btn {
+    padding: 8px 20px;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #444;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+
+    &:hover:not(:disabled) { border-color: #111; color: #111; }
+    &:disabled { opacity: 0.3; cursor: not-allowed; }
+}
+
+.pg-info {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .filters-bar { flex-direction: column; align-items: stretch; }
+    .search-box { min-width: unset; }
+
+    .orders-table {
+        th:nth-child(2), td:nth-child(2) { display: none; }
+    }
+}

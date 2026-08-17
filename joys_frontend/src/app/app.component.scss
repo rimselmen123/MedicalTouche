@@ -1,0 +1,68 @@
+/* Wrapper fixe en bas à droite */
+.toast-wrapper {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    pointer-events: none;
+    /* Permet de cliquer à travers */
+}
+
+.toast-card {
+    pointer-events: auto;
+    width: 340px;
+    background: rgba(255, 255, 255, 0.8);
+    /* Fond semi-transparent */
+    backdrop-filter: blur(12px);
+    /* Effet de flou derrière */
+    -webkit-backdrop-filter: blur(12px);
+    padding: 20px;
+    border-radius: 4px;
+    /* Angles peu arrondis pour faire "pro" */
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+
+    /* Animation d'entrée fluide */
+    animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+    .toast-label {
+        display: block;
+        font-family: var(--font-serif);
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 4px;
+        color: var(--text-main);
+    }
+
+    .toast-message {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin: 0;
+    }
+
+    /* Indicateur de couleur discret sur le côté */
+    &.is-success {
+        border-left: 3px solid var(--success);
+    }
+
+    &.is-error {
+        border-left: 3px solid var(--error);
+    }
+}
+
+@keyframes slideUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

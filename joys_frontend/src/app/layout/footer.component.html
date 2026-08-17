@@ -1,0 +1,86 @@
+<footer class="footer">
+
+  <div class="footer-top">
+    <div class="container ft-grid">
+
+      <!-- Brand -->
+      <div class="ft-brand">
+        <a routerLink="/" class="ft-logo-link">
+          <img src="assets/joyslogo.jpg" alt="Joy's" class="ft-logo-img">
+          <div class="ft-logo-names">
+            <span class="ft-logo-brand">Joy's</span>
+            <span class="ft-logo-sub">Story Mode</span>
+          </div>
+        </a>
+        <p class="ft-tagline">Votre boutique en ligne de mode et tendances. Livraison partout en Tunisie.</p>
+        <div class="ft-socials">
+          <a href="https://www.facebook.com/JOYS.PageOfficielle/" target="_blank" rel="noopener" class="ft-social" aria-label="Facebook">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+            </svg>
+          </a>
+          <a href="https://www.instagram.com/joys_officiel/" target="_blank" rel="noopener" class="ft-social" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="2" y="2" width="20" height="20" rx="5"/>
+              <circle cx="12" cy="12" r="4"/>
+              <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/>
+            </svg>
+          </a>
+          <a href="https://www.tiktok.com/@joys_officiel" target="_blank" rel="noopener" class="ft-social" aria-label="TikTok">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5
+                2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.34
+                6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18
+                8.18 0 0 0 4.77 1.52V6.76a4.85 4.85 0 0 1-1-.07z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <div class="ft-col">
+        <h4 class="ft-col-title">Boutique</h4>
+        <ul class="ft-list">
+          <li><a routerLink="/shop/catalog" class="ft-link">Tous les produits</a></li>
+          <li><a routerLink="/shop/catalog" [queryParams]="{featured:true}" class="ft-link">Nos coups de coeur</a></li>
+          <li><a routerLink="/shop/catalog" [queryParams]="{sort:'newest'}" class="ft-link">Nouveautés</a></li>
+          <li><a routerLink="/shop/catalog" [queryParams]="{sort:'price_asc'}" class="ft-link">Nos prix en baisse</a></li>
+        </ul>
+      </div>
+
+      <div class="ft-col">
+        <h4 class="ft-col-title">Mon Compte</h4>
+        <ul class="ft-list">
+          <li><a routerLink="/auth/login" class="ft-link">Connexion</a></li>
+          <li><a routerLink="/auth/register" class="ft-link">Créer un compte</a></li>
+          <li><a routerLink="/client/orders" class="ft-link">Mes commandes</a></li>
+          <li><a routerLink="/client/profile" class="ft-link">Mon profil</a></li>
+        </ul>
+      </div>
+
+      <div class="ft-col">
+        <h4 class="ft-col-title">Aide</h4>
+        <ul class="ft-list">
+          <li><a routerLink="/client/reclamations/new" class="ft-link">Contactez-nous</a></li>
+          <li><a href="#" class="ft-link">Conditions générales</a></li>
+          <li><a href="#" class="ft-link">Politique de confidentialité</a></li>
+          <li><a href="#" class="ft-link">Mentions légales</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="footer-bottom">
+    <div class="container fb-inner">
+      <span class="fb-copy">&copy; {{ year }} Joy's — Story Mode. Tous droits réservés.</span>
+      <div class="fb-socials">
+        <a href="https://www.facebook.com/JOYS.PageOfficielle/" target="_blank" rel="noopener">Facebook</a>
+        <a href="https://www.instagram.com/joys_officiel/" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://www.tiktok.com/@joys_officiel" target="_blank" rel="noopener">TikTok</a>
+      </div>
+    </div>
+  </div>
+
+</footer>

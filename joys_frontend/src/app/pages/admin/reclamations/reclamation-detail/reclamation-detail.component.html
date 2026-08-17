@@ -1,0 +1,88 @@
+<div class="page-container" *ngIf="reclamation && !loading">
+
+    <div class="nav-back reveal">
+        <a routerLink="/admin/reclamations" class="back-link">
+            <span class="arrow">←</span> Retour au centre de support
+        </a>
+    </div>
+
+    <header class="ticket-header reveal delay-1">
+        <div class="header-main">
+            <span class="ticket-id">Ticket #{{ reclamation.id }}</span>
+            <h1 class="ticket-subject">{{ reclamation.subject }}</h1>
+        </div>
+
+        <div class="header-status">
+            <span class="status-badge" [ngClass]="reclamation.status.toLowerCase()">
+                {{ reclamation.status }}
+            </span>
+        </div>
+    </header>
+
+    <div class="layout-grid">
+
+        <div class="main-content space-y-large reveal delay-2">
+
+            <section class="message-card">
+                <div class="card-header">
+                    <div class="user-avatar">
+                        {{ reclamation.email.charAt(0).toUpperCase() }}
+                    </div>
+                    <div class="user-info">
+                        <span class="user-email">{{ reclamation.email }}</span>
+                        <span class="msg-date">{{ reclamation.createdAt | date:'medium' }}</span>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <p class="message-text">{{ reclamation.message }}</p>
+                </div>
+
+                <div class="card-footer">
+                    <span class="related-order" *ngIf="reclamation.orderId">
+                        Commande concernée : <strong>#{{ reclamation.orderId }}</strong>
+                    </span>
+                </div>
+            </section>
+
+        </div>
+
+        <aside class="sidebar reveal delay-3">
+
+            <div class="action-card">
+                <h3 class="card-title">Résolution</h3>
+
+                <form [formGroup]="replyForm" (ngSubmit)="submitReply()">
+
+                    <div class="form-group">
+                        <label class="input-label">Mettre à jour le statut</label>
+                        <div class="select-wrapper">
+                            <select formControlName="status" class="input-minimal">
+                                <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="input-label">Votre Réponse</label>
+                        <textarea formControlName="adminNote" rows="6" class="input-minimal"
+                            placeholder="Rédigez une réponse courtoise..."></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" [disabled]="replyForm.invalid" class="btn btn-primary btn-full">
+                            Envoyer la réponse
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+        </aside>
+
+    </div>
+</div>
+
+<div *ngIf="loading" class="loading-wrapper">
+    <app-loading label="Chargement du ticket..."></app-loading>
+</div>

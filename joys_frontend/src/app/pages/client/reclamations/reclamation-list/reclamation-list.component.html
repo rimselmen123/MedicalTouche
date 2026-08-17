@@ -1,0 +1,67 @@
+<div class="page-container">
+
+    <div class="container">
+
+        <div class="header-split reveal">
+            <app-page-header title="Mes Tickets" subtitle="Historique de vos demandes d'assistance."></app-page-header>
+
+            <a routerLink="/client/reclamations/new" class="btn btn-primary">
+                <span class="plus-icon">+</span> Ouvrir un ticket
+            </a>
+        </div>
+
+        <div *ngIf="loading" class="loading-wrapper">
+            <app-loading label="Chargement de vos échanges..."></app-loading>
+        </div>
+
+        <div *ngIf="!loading">
+
+            <div *ngIf="reclamations.length === 0" class="empty-wrapper reveal">
+                <app-empty-state emoji="✨" title="Aucune réclamation"
+                    description="Tout semble se passer à merveille pour vous.">
+                </app-empty-state>
+            </div>
+
+            <div *ngIf="reclamations.length > 0" class="tickets-list">
+
+                <div *ngFor="let rec of reclamations; let i = index" class="ticket-card"
+                    [style.animation-delay]="(i * 50) + 'ms'">
+
+                    <div class="ticket-header">
+                        <div class="meta-left">
+                            <span class="ticket-id">Ticket #{{ rec.id }}</span>
+                            <span class="date">{{ rec.createdAt | date:'mediumDate' }}</span>
+                        </div>
+
+                        <div class="status-wrapper">
+                            <span class="status-pill" [ngClass]="rec.status.toLowerCase()">
+                                <span class="dot"></span> {{ rec.status }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="ticket-body">
+                        <h3 class="subject">{{ rec.subject }}</h3>
+
+                        <div class="context-info" *ngIf="rec.orderNumber">
+                            <span class="icon">📦</span> Concernant la commande <strong>#{{ rec.orderNumber }}</strong>
+                        </div>
+
+                        <p class="message-content">"{{ rec.message }}"</p>
+                    </div>
+
+                    <div class="admin-reply" *ngIf="rec.adminResponse">
+                        <div class="reply-header">
+                            <span class="avatar-admin">H</span>
+                            <span class="reply-label">Réponse du Service Client</span>
+                        </div>
+                        <p class="reply-text">{{ rec.adminResponse }}</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,67 @@
+<div class="page-container">
+
+    <div class="container">
+
+        <div class="header-center reveal">
+            <h1 class="page-title">Service Client</h1>
+            <p class="page-subtitle">Une question, un souci ? Nous sommes à votre écoute.</p>
+        </div>
+
+        <div class="form-wrapper reveal delay-1">
+
+            <form [formGroup]="form" (ngSubmit)="submit()" class="stationery-card">
+
+                <div class="form-grid">
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="input-label">Nom Complet</label>
+                            <input type="text" formControlName="fullName" class="input-minimal" placeholder="Votre nom">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="input-label">Email</label>
+                            <input type="email" formControlName="email" class="input-minimal"
+                                placeholder="votre@email.com">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="input-label">Téléphone</label>
+                        <input type="tel" formControlName="phone" class="input-minimal" placeholder="+216...">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="input-label">Objet de la demande</label>
+                        <input type="text" formControlName="subject" class="input-minimal"
+                            placeholder="Ex: Retard de livraison, produit manquant...">
+                    </div>
+
+                    <div class="form-group message-group">
+                        <label class="input-label">Votre Message</label>
+                        <textarea formControlName="message" rows="6" class="input-minimal text-area"
+                            placeholder="Dites-nous tout, nous ferons le nécessaire pour vous satisfaire."></textarea>
+                    </div>
+
+                </div>
+
+                <div class="form-actions">
+                    <a routerLink="/" class="btn-text">Annuler et retour</a>
+
+                    <button type="submit" [disabled]="form.invalid || submitting" class="btn btn-primary"
+                        [class.btn-loading]="submitting">
+                        <span *ngIf="!submitting">Envoyer la demande</span>
+                        <span *ngIf="submitting">Envoi en cours...</span>
+                    </button>
+                </div>
+
+            </form>
+
+            <div class="footer-note reveal delay-2">
+                <p>Notre équipe s'engage à vous répondre sous 24h ouvrables.</p>
+            </div>
+
+        </div>
+
+    </div>
+</div>

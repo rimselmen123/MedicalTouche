@@ -1,0 +1,108 @@
+<div class="dashboard-container">
+
+    <header class="dashboard-header reveal">
+        <h1 class="title">Tableau de Bord</h1>
+        <p class="subtitle">Vue d'ensemble de votre activité en temps réel.</p>
+    </header>
+
+    <div class="loading-wrapper" *ngIf="loading">
+        <app-loading label="Analyse des données..."></app-loading>
+    </div>
+
+    <div *ngIf="!loading" class="dashboard-content">
+
+        <section class="stats-grid">
+
+            <div class="stat-card card-black reveal delay-1">
+                <div class="stat-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.5">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="8.5" cy="7" r="4"></circle>
+                        <polyline points="17 11 19 13 23 9"></polyline>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-label">Commandes du Jour</span>
+                    <span class="stat-value">{{ stats.todayOrders }}</span>
+                </div>
+            </div>
+
+            <div class="stat-card card-white reveal delay-2">
+                <span class="stat-label">Chiffre d'Affaires</span>
+                <span class="stat-value serif">{{ stats.todayRevenue | number:'1.3-3' }} <small>TND</small></span>
+            </div>
+
+            <div class="stat-card card-white reveal delay-3">
+                <span class="stat-label">En Attente</span>
+                <span class="stat-value">{{ stats.pendingOrders }}</span>
+            </div>
+        </section>
+
+
+        <div class="content-split">
+
+            <div class="section-block reveal delay-2">
+                <div class="block-header">
+                    <h2>Dernières Commandes</h2>
+                    <a routerLink="/admin/orders" class="link-action">Tout voir →</a>
+                </div>
+
+                <div class="table-container">
+                    <table class="minimal-table">
+                        <thead>
+                            <tr>
+                                <th>Réf</th>
+                                <th>Client</th>
+                                <th>Total</th>
+                                <th>État</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let order of recentOrders">
+                                <td class="font-mono text-muted">#{{ order.orderNumber }}</td>
+                                <td><span class="client-name">{{ order.customerName }}</span></td>
+                                <td class="font-price">{{ order.total | number:'1.3-3' }} TND</td>
+                                <td>
+                                    <span class="status-pill" [ngClass]="getStatusClass(order.status)">
+                                        {{ getStatusLabel(order.status) }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr *ngIf="recentOrders.length === 0">
+                                <td colspan="4" class="text-center py-8 text-muted">Aucune commande récente.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section-block reveal delay-3">
+                <div class="block-header">
+                    <h2>Stock Faible</h2>
+                    <a routerLink="/admin/stock" class="link-action">Gérer</a>
+                </div>
+
+                <div class="stock-list">
+                    <div *ngFor="let item of lowStockItems" class="stock-item">
+                        <div class="item-icon">!</div>
+                        <div class="item-details">
+                            <span class="item-name">{{ item.name }}</span>
+                            <span class="item-cat">{{ item.categoryName }}</span>
+                        </div>
+                        <div class="item-metric">
+                            <span class="metric-val">{{ item.quantity }}</span>
+                            <span class="metric-label">restants</span>
+                        </div>
+                    </div>
+
+                    <div *ngIf="lowStockItems.length === 0" class="empty-stock">
+                        <span class="check-icon">✓</span>
+                        <p>Tout est en ordre.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

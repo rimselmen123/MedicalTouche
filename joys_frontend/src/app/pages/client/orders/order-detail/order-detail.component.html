@@ -1,0 +1,138 @@
+<div class="page-container" *ngIf="order && !loading">
+    <div class="container">
+
+        <!-- Back -->
+        <a routerLink="/client/orders" class="back-link reveal">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Mes Commandes
+        </a>
+
+        <!-- Header -->
+        <div class="order-head reveal delay-1">
+            <div>
+                <h1 class="order-num">#{{ order.orderNumber }}</h1>
+                <span class="order-date">Passée le {{ order.createdAt | date:'dd MMMM yyyy' }}</span>
+            </div>
+            <span class="status-chip" [ngClass]="isCanceled() ? 'canceled' : ''">
+                {{ statusLabel(order.status) }}
+            </span>
+        </div>
+
+        <!-- ═══ TRACKING STEPPER ═══ -->
+        <div class="tracker reveal delay-2" *ngIf="!isCanceled()">
+            <div class="tracker-title">Suivi de votre commande</div>
+            <div class="tracker-steps">
+                <div *ngFor="let step of steps; let i = index"
+                     class="t-step"
+                     [class.done]="isStepDone(i)"
+                     [class.active]="isStepActive(i)"
+                     [class.future]="!isStepDone(i) && !isStepActive(i)">
+                    <div class="t-dot">
+                        <svg *ngIf="isStepDone(i)" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        <span *ngIf="!isStepDone(i)">{{ step.icon }}</span>
+                    </div>
+                    <span class="t-label">{{ step.label }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="canceled-box reveal delay-2" *ngIf="isCanceled()">
+            Cette commande a été annulée.
+        </div>
+
+        <!-- ═══ CONTENT ═══ -->
+        <div class="grid reveal delay-3">
+
+            <!-- Articles -->
+            <section class="card">
+                <h2 class="card-title">Articles commandés</h2>
+                <div class="items">
+                    <div *ngFor="let item of order.items" class="item">
+                        <div class="item-img">
+                            <img [src]="item.imageUrl | premiumImg" [alt]="item.name">
+                            <span class="qty">x{{ item.quantity }}</span>
+                        </div>
+                        <div class="item-info">
+                            <span class="item-name">{{ item.name }}</span>
+                            <span class="item-sub" *ngIf="item.variantName">{{ item.variantName }}</span>
+                        </div>
+                        <span class="item-price">{{ item.unitPrice * item.quantity | number:'1.2-2' }} TND</span>
+                    </div>
+                </div>
+
+                <div class="totals">
+                    <div class="t-row" *ngIf="order.subtotal">
+                        <span>Sous-total</span>
+                        <span>{{ order.subtotal | number:'1.2-2' }} TND</span>
+                    </div>
+                    <div class="t-row" *ngIf="order.deliveryFee">
+                        <span>Livraison</span>
+                        <span>{{ order.deliveryFee | number:'1.2-2' }} TND</span>
+                    </div>
+                    <div class="t-row" *ngIf="order.discountTotal">
+                        <span>Réduction</span>
+                        <span>-{{ order.discountTotal | number:'1.2-2' }} TND</span>
+                    </div>
+                    <div class="t-row t-final">
+                        <span>Total</span>
+                        <span>{{ order.total | number:'1.2-2' }} TND</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sidebar -->
+            <div class="side">
+
+                <!-- Payment Info -->
+                <section class="card">
+                    <h2 class="card-title">Paiement</h2>
+                    <div class="info-line">
+                        <span>Mode</span>
+                        <strong>{{ paymentMethodLabel(order.paymentMethod) }}</strong>
+                    </div>
+                    <div class="info-line">
+                        <span>État</span>
+                        <strong [class.paid]="order.paymentStatus === 2" [class.failed]="order.paymentStatus === 3">
+                            {{ paymentLabel(order.paymentStatus) }}
+                        </strong>
+                    </div>
+                </section>
+
+                <!-- Shipping -->
+                <section class="card" *ngIf="order.shippingAddress">
+                    <h2 class="card-title">Adresse de livraison</h2>
+                    <p class="addr-line"><strong>{{ order.shippingAddress?.fullName }}</strong></p>
+                    <p class="addr-line">{{ order.shippingAddress?.line1 }}</p>
+                    <p class="addr-line" *ngIf="order.shippingAddress?.line2">{{ order.shippingAddress.line2 }}</p>
+                    <p class="addr-line">{{ order.shippingAddress?.postalCode }} {{ order.shippingAddress?.city }}</p>
+                    <p class="addr-line" *ngIf="order.shippingAddress?.governorate">{{ order.shippingAddress.governorate }}</p>
+                    <p class="addr-line phone">{{ order.shippingAddress?.phone }}</p>
+                </section>
+
+                <!-- Note -->
+                <section class="card" *ngIf="order.customerNote">
+                    <h2 class="card-title">Votre note</h2>
+                    <p class="note">"{{ order.customerNote }}"</p>
+                </section>
+
+                <!-- Actions -->
+                <div class="actions">
+                    <button *ngIf="canCancel()" (click)="cancelOrder()" class="btn-cancel-order">
+                        Annuler la commande
+                    </button>
+                    <a routerLink="/client/reclamations/new" class="help-link">Besoin d'aide ?</a>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div *ngIf="loading" class="loading-wrapper">
+    <app-loading label="Chargement..."></app-loading>
+</div>

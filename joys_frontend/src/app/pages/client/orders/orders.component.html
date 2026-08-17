@@ -1,0 +1,63 @@
+<div class="page-container">
+    <div class="container">
+        <app-page-header title="Mes Commandes" subtitle="Historique et suivi de vos achats."></app-page-header>
+
+        <div *ngIf="loading" class="loading-wrapper">
+            <app-loading label="Chargement..."></app-loading>
+        </div>
+
+        <div *ngIf="!loading">
+
+            <div *ngIf="orders.length === 0" class="empty-wrapper reveal">
+                <app-empty-state emoji="🛍️" title="Aucune commande"
+                    description="Vous n'avez pas encore passé de commande.">
+                    <a routerLink="/shop/catalog" class="btn btn-primary">Voir les produits</a>
+                </app-empty-state>
+            </div>
+
+            <div *ngIf="orders.length > 0" class="orders-list">
+
+                <div class="list-header reveal">
+                    <span>Référence</span>
+                    <span>Date</span>
+                    <span>Statut</span>
+                    <span class="text-right">Total</span>
+                    <span></span>
+                </div>
+
+                <a *ngFor="let order of orders; let i = index"
+                   [routerLink]="['/client/orders', order.id]"
+                   class="order-row"
+                   [style.animation-delay]="(i * 50) + 'ms'">
+
+                    <div class="col-ref">
+                        <span class="ref-number">#{{ order.orderNumber }}</span>
+                        <span class="mobile-date">{{ order.createdAt | date:'shortDate' }}</span>
+                    </div>
+
+                    <div class="col-date">{{ order.createdAt | date:'mediumDate' }}</div>
+
+                    <div class="col-status">
+                        <span class="status-chip" [ngClass]="status(order.status).css">
+                            {{ status(order.status).label }}
+                        </span>
+                    </div>
+
+                    <div class="col-price">
+                        <span class="price-val">{{ order.total | number:'1.2-2' }}</span>
+                        <span class="currency">TND</span>
+                        <span class="payment-tag" [class.paid]="isPaid(order.paymentStatus)">
+                            {{ isPaid(order.paymentStatus) ? 'Payé' : 'Non payé' }}
+                        </span>
+                    </div>
+
+                    <div class="col-arrow">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

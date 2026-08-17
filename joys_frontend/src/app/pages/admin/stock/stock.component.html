@@ -1,0 +1,172 @@
+<div class="page-container">
+
+    <div class="header-split reveal">
+        <app-page-header title="Inventaire" subtitle="Suivi des stocks et mouvements."></app-page-header>
+    </div>
+
+    <div class="tabs-wrapper reveal delay-1">
+        <nav class="tabs-nav">
+            <button (click)="setTab('items')" class="tab-btn" [class.active]="activeTab === 'items'">
+                État du Stock
+            </button>
+            <button (click)="setTab('movements')" class="tab-btn" [class.active]="activeTab === 'movements'">
+                Historique Mouvements
+            </button>
+            <button (click)="setTab('reservations')" class="tab-btn" [class.active]="activeTab === 'reservations'">
+                Réservations Actives
+            </button>
+        </nav>
+    </div>
+
+    <div class="content-area reveal delay-2">
+
+        <app-loading *ngIf="loading"></app-loading>
+
+        <div *ngIf="activeTab === 'items' && !loading" class="table-container">
+            <table class="stock-table">
+                <thead>
+                    <tr>
+                        <th class="th-main">Article</th>
+                        <th class="text-center">En Main</th>
+                        <th class="text-center">Réservé</th>
+                        <th class="text-center">Disponible</th>
+                        <th class="text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of stockItems">
+                        <td>
+                            <div class="item-info">
+                                <span class="item-name">{{ getArticleName(item.articleId) }}</span>
+                                <span class="item-variant" *ngIf="item.articleVariantId">Variante : #{{
+                                    item.articleVariantId }}</span>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <span class="mono-value">{{ item.onHand | number:'1.0-0' }}</span>
+                        </td>
+                        <td class="text-center">
+                            <span class="mono-value muted">{{ item.reserved | number:'1.0-0' }}</span>
+                        </td>
+                        <td class="text-center">
+                            <span class="stock-badge" [class.low]="item.available < 10"
+                                [class.out]="item.available <= 0">
+                                {{ item.available | number:'1.0-0' }}
+                            </span>
+                        </td>
+                        <td class="text-right">
+                            <button (click)="openAdjustModal(item)" class="btn-adjust">Ajuster</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="empty-state" *ngIf="stockItems.length === 0">
+                <p>Inventaire vide.</p>
+            </div>
+        </div>
+
+        <div *ngIf="activeTab === 'movements' && !loading" class="table-container">
+            <table class="stock-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Article</th>
+                        <th class="text-right">Quantité</th>
+                        <th class="text-right">Note</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let m of movements">
+                        <td class="date-col">{{ m.createdAt | date:'short' }}</td>
+                        <td>
+                            <span class="move-type" [ngClass]="m.type.toLowerCase()">{{ m.type }}</span>
+                        </td>
+                        <td>
+                            <span class="ref-text">{{ m.refType }} #{{ m.refId }}</span>
+                        </td>
+                        <td class="text-right">
+                            <span class="mono-value bold">{{ m.quantity > 0 ? '+' : ''}}{{ m.quantity }}</span>
+                        </td>
+                        <td class="text-right note-col">{{ m.note || '-' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div *ngIf="activeTab === 'reservations' && !loading" class="table-container">
+            <div class="actions-bar" *ngIf="reservations.length > 0">
+                <button (click)="expireReservations()" class="btn-warning">
+                    Nettoyer les expirations
+                </button>
+            </div>
+
+            <table class="stock-table">
+                <thead>
+                    <tr>
+                        <th>Commande</th>
+                        <th>Expire le</th>
+                        <th>Détail</th>
+                        <th class="text-right">Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let r of reservations">
+                        <td><span class="order-ref">#{{ r.orderNumber }}</span></td>
+                        <td class="date-col">{{ r.expiresAt | date:'medium' }}</td>
+                        <td>
+                            <div class="res-items">
+                                <span *ngFor="let i of r.items">{{ i.name }} (x{{ i.quantity }})</span>
+                            </div>
+                        </td>
+                        <td class="text-right">
+                            <span class="status-text">{{ r.status }}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="empty-state" *ngIf="reservations.length === 0">
+                <p>Aucune réservation active.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div *ngIf="showAdjustModal" class="modal-overlay">
+    <div class="modal-backdrop" (click)="closeAdjustModal()"></div>
+
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3>Ajustement de Stock</h3>
+            <button class="close-btn" (click)="closeAdjustModal()">×</button>
+        </div>
+
+        <div class="modal-context">
+            <span class="context-label">Article #{{ selectedItem?.articleId }}</span>
+            <span class="context-value">Stock Actuel : {{ selectedItem?.onHand }}</span>
+        </div>
+
+        <form [formGroup]="adjustForm" (ngSubmit)="submitAdjust()">
+            <div class="form-group">
+                <label class="input-label">Variation (+/-)</label>
+                <input type="number" formControlName="delta" class="input-minimal large-input" placeholder="0">
+                <p class="hint">Ex: -5 pour une perte, +10 pour un arrivage.</p>
+            </div>
+
+            <div class="form-group">
+                <label class="input-label">Motif</label>
+                <input type="text" formControlName="note" class="input-minimal" placeholder="Ex: Casse, Inventaire...">
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" (click)="closeAdjustModal()" class="btn-text">Annuler</button>
+                <button type="submit" [disabled]="adjustForm.invalid || loading" class="btn btn-primary">
+                    Confirmer
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

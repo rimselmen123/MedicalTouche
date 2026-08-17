@@ -1,0 +1,156 @@
+<!-- ================================================================
+     ROW 1 — MAIN HEADER (Kiabi-style centered logo)
+     ================================================================ -->
+<header class="header" [class.scrolled]="isScrolled">
+  <div class="container header-grid">
+
+    <!-- Left: Search -->
+    <div class="header-left">
+      <div class="search-box">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+        </svg>
+        <input type="text" placeholder="Rechercher..." [(ngModel)]="searchQuery" (keydown)="onSearchKey($event)">
+        <button class="search-go" *ngIf="searchQuery" (click)="onSearch()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Center: Logo -->
+    <a routerLink="/" class="logo">
+      <img src="assets/joyslogo.jpg" alt="Joy's">
+      <div class="logo-text">
+        <span class="logo-brand">JOY'S</span>
+        <span class="logo-sub">STORY MODE</span>
+      </div>
+    </a>
+
+    <!-- Right: Actions -->
+    <div class="header-right">
+      <!-- Account -->
+      <div class="account-wrap">
+        <a class="header-action" aria-label="Mon compte">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span class="action-label">Mon compte</span>
+        </a>
+        <div class="account-card">
+          <ng-container *ngIf="user$ | async as user; else guestMenu">
+            <div class="ac-header">
+              <span class="ac-label">Compte</span>
+              <span class="ac-name">{{ user.fullName }}</span>
+              <span class="ac-role" *ngIf="user.roles.includes('Admin')">Admin</span>
+            </div>
+            <div class="ac-sep"></div>
+            <a *ngIf="user.roles.includes('Admin')" routerLink="/admin/dashboard" class="ac-link">Panel Admin</a>
+            <a routerLink="/client/profile" class="ac-link">Mon Profil</a>
+            <a routerLink="/client/orders" class="ac-link">Mes Commandes</a>
+            <a routerLink="/client/reclamations" class="ac-link">Réclamations</a>
+            <div class="ac-sep"></div>
+            <button (click)="logout()" class="ac-link ac-link--danger">Déconnexion</button>
+          </ng-container>
+          <ng-template #guestMenu>
+            <a routerLink="/auth/login" class="ac-link">Connexion</a>
+            <a routerLink="/auth/register" class="ac-link">Créer un compte</a>
+          </ng-template>
+        </div>
+      </div>
+
+      <!-- Cart -->
+      <a routerLink="/client/cart" class="header-action cart-action" aria-label="Panier">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 01-8 0"/>
+        </svg>
+        <span class="cart-badge" *ngIf="(cartItemCount$ | async) as count">{{ count }}</span>
+      </a>
+
+      <!-- Mobile Toggle -->
+      <button class="mobile-toggle" (click)="toggleMobileMenu()" aria-label="Menu">
+        <svg *ngIf="!showMobileMenu" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+        <svg *ngIf="showMobileMenu" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+  </div>
+</header>
+
+<!-- ================================================================
+     ROW 2 — NAVIGATION BAR (Category links)
+     ================================================================ -->
+<nav class="nav-bar" [class.scrolled]="isScrolled">
+  <div class="container nav-inner">
+    <div class="nav-links">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Accueil</a>
+
+      <div class="nav-drop-wrap">
+        <a routerLink="/shop/catalog" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}" class="nav-link">
+          Catalogue
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M6 9l6 6 6-6"/>
+          </svg>
+        </a>
+        <div class="mega-drop" *ngIf="categories.length > 0">
+          <a *ngFor="let cat of categories"
+             [routerLink]="['/shop/catalog']"
+             [queryParams]="{ categoryId: cat.id }"
+             class="mega-link">{{ cat.name }}</a>
+          <div class="mega-sep"></div>
+          <a routerLink="/shop/catalog" class="mega-link mega-link--all">Voir tout</a>
+        </div>
+      </div>
+
+      <a routerLink="/client/reclamations/new" class="nav-link">Contactez-nous</a>
+    </div>
+
+    <div class="nav-right">
+      <span class="nav-info">
+        <span class="nav-info-label">Livraison</span> Partout en Tunisie
+      </span>
+    </div>
+  </div>
+</nav>
+
+<!-- ================================================================
+     MOBILE MENU OVERLAY
+     ================================================================ -->
+<div class="mobile-menu" [class.open]="showMobileMenu">
+  <div class="mobile-inner">
+    <div class="mobile-search">
+      <input type="text" placeholder="Rechercher..." [(ngModel)]="searchQuery" (keydown)="onSearchKey($event)">
+      <button (click)="onSearch(); showMobileMenu = false">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+        </svg>
+      </button>
+    </div>
+    <a routerLink="/" class="mobile-link" (click)="showMobileMenu = false">Accueil</a>
+    <a routerLink="/shop/catalog" class="mobile-link" (click)="showMobileMenu = false">Catalogue</a>
+    <div class="mobile-cats" *ngIf="categories.length > 0">
+      <a *ngFor="let cat of categories" [routerLink]="['/shop/catalog']" [queryParams]="{ categoryId: cat.id }" class="mobile-cat" (click)="showMobileMenu = false">{{ cat.name }}</a>
+    </div>
+    <a routerLink="/client/reclamations/new" class="mobile-link" (click)="showMobileMenu = false">Contactez-nous</a>
+    <div class="mobile-sep"></div>
+    <ng-container *ngIf="user$ | async as user; else mobileGuest">
+      <a routerLink="/client/profile" class="mobile-link" (click)="showMobileMenu = false">Mon Profil</a>
+      <a routerLink="/client/orders" class="mobile-link" (click)="showMobileMenu = false">Mes Commandes</a>
+      <a routerLink="/client/cart" class="mobile-link" (click)="showMobileMenu = false">Mon Panier</a>
+      <a *ngIf="user.roles.includes('Admin')" routerLink="/admin/dashboard" class="mobile-link" (click)="showMobileMenu = false">Panel Admin</a>
+      <button class="mobile-link mobile-link--danger" (click)="logout(); showMobileMenu = false">Déconnexion</button>
+    </ng-container>
+    <ng-template #mobileGuest>
+      <a routerLink="/auth/login" class="mobile-link" (click)="showMobileMenu = false">Connexion</a>
+      <a routerLink="/auth/register" class="mobile-link" (click)="showMobileMenu = false">Créer un compte</a>
+    </ng-template>
+  </div>
+</div>

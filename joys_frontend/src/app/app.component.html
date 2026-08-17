@@ -1,0 +1,16 @@
+<app-shell></app-shell>
+
+<div class="toast-wrapper" *ngIf="(toast.items$ | async) as items">
+
+  <div class="toast-card" *ngFor="let t of items" [class.is-error]="t.type === 'error'"
+    [class.is-success]="t.type === 'success'">
+
+    <div class="toast-track"></div>
+    <div class="toast-content">
+      <span class="toast-label serif">{{ t.type === 'success' ? 'Succès' : 'Note' }}</span>
+      <p class="toast-message">{{ t.message }}</p>
+    </div>
+
+  </div>
+
+</div>

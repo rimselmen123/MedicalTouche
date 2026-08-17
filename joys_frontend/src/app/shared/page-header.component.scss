@@ -1,0 +1,124 @@
+:host {
+    display: block;
+}
+
+.header-section {
+    padding: 60px 0 20px;
+    /* Beaucoup d'espace au-dessus = Luxe */
+    background: transparent;
+}
+
+.header-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    /* Aligne le bas du titre avec les boutons */
+    gap: 32px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    /* Sécurité mobile */
+}
+
+/* --- TYPOGRAPHIE --- */
+.text-group {
+    max-width: 800px;
+}
+
+.page-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    /* Responsive mais géant */
+    font-weight: 700;
+    /* Ou 400 selon tes goûts */
+    color: #111;
+    line-height: 1.1;
+    margin: 0 0 12px 0;
+    letter-spacing: -0.03em;
+}
+
+.page-subtitle {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.1rem;
+    color: #666;
+    margin: 0;
+    line-height: 1.6;
+    max-width: 60ch;
+    /* Longueur de lecture optimale */
+}
+
+/* --- ACTIONS --- */
+.actions-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 8px;
+    /* Petit ajustement optique */
+}
+
+/* --- DIVIDER --- */
+.divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, #111 0%, transparent 100%);
+    /* Dégradé subtil */
+    opacity: 0.1;
+    transform-origin: left;
+}
+
+/* --- ANIMATIONS (Smoothie) --- */
+.reveal {
+    opacity: 0;
+    animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.delay-1 {
+    animation-delay: 0.15s;
+}
+
+.delay-2 {
+    animation-delay: 0.3s;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Animation spéciale pour la ligne */
+.divider.reveal {
+    animation: growRight 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: 0.3s;
+}
+
+@keyframes growRight {
+    from {
+        transform: scaleX(0);
+        opacity: 0;
+    }
+
+    to {
+        transform: scaleX(1);
+        opacity: 0.1;
+    }
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+    .header-wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 24px;
+    }
+
+    .actions-group {
+        width: 100%;
+        /* justify-content: flex-start; Si tu veux les boutons à gauche sur mobile */
+    }
+}
