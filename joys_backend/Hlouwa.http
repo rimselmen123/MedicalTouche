@@ -1,0 +1,6 @@
+@Hlouwa_HostAddress = http://localhost:5273
+
+GET {{Hlouwa_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
