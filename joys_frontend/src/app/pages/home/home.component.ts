@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { ArticleService } from '../../core/services/article.service';
 import { Category, Article } from '../../core/models/article.models';
 import { Subscription, forkJoin, interval } from 'rxjs';
@@ -15,6 +15,7 @@ interface CategorySection {
     selector: 'app-home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {

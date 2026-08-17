@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ReclamationService } from '../../../../core/services/reclamation.service';
 import { Reclamation, ReclamationStatus } from '../../../../core/models/reclamation.models';
 
@@ -6,6 +6,7 @@ import { Reclamation, ReclamationStatus } from '../../../../core/models/reclamat
     selector: 'app-admin-reclamation-list',
     templateUrl: './reclamation-list.component.html',
     standalone: false,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./reclamation-list.component.scss']
 })
 export class ReclamationListComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ArticleService } from '../../../core/services/article.service';
 import { CartService } from '../../../core/services/cart.service';
@@ -10,6 +10,7 @@ import { Article, ArticleVariant, ArticleImageDto } from '../../../core/models/a
     templateUrl: './article-details.component.html',
     standalone: false,
     styleUrls: ['./article-details.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     encapsulation: ViewEncapsulation.None
 })
 export class ArticleDetailsComponent implements OnInit {

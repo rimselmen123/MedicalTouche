@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { OrderService } from '../../../core/services/order.service';
 import { StockService } from '../../../core/services/stock.service';
 import { Order, ORDER_STATUS_MAP, ORDER_STATUS_LABELS } from '../../../core/models/order.models';
@@ -8,6 +8,7 @@ import { StockItem } from '../../../core/models/stock.models';
   selector: 'app-admin-dashboard',
   templateUrl: './dashboard.component.html',
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {

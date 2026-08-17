@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ArticleService } from '../../../../core/services/article.service';
 import { Category } from '../../../../core/models/article.models';
@@ -10,6 +10,7 @@ import { environment } from '../../../../../environments/environment';
     selector: 'app-admin-category-list',
     templateUrl: './category-list.component.html',
     standalone: false,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./category-list.component.scss']
 })
 export class CategoryListComponent implements OnInit, OnDestroy {

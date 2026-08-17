@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 
@@ -17,6 +17,7 @@ interface MenuSection {
     selector: 'app-admin-layout',
     templateUrl: './admin-layout.component.html',
     standalone: false,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./admin-layout.component.scss']
 })
 export class AdminLayoutComponent {

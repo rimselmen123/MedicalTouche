@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-forbidden',
@@ -42,6 +42,7 @@ import { Component } from '@angular/core';
       line-height: 1.7;
     }
   `],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class ForbiddenComponent { }

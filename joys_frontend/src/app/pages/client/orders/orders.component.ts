@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Order } from 'src/app/core/models/order.models';
 import { OrderService } from 'src/app/core/services/order.service';
 
@@ -20,6 +20,7 @@ const DEFAULT_STATUS = { label: '—', css: 'pending' };
     selector: 'app-orders',
     templateUrl: './orders.component.html',
     standalone: false,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./orders.component.scss']
 })
 export class OrdersComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OrderService } from '../../../../core/services/order.service';
 import { Order, PAYMENT_METHOD_MAP } from '../../../../core/models/order.models';
@@ -36,6 +36,7 @@ const PAYMENT_LABELS: { [key: string]: string } = {
     selector: 'app-admin-order-detail',
     templateUrl: './order-detail.component.html',
     standalone: false,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./order-detail.component.scss']
 })
 export class OrderDetailComponent implements OnInit {

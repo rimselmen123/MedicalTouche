@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { ArticleService } from '../../../../core/services/article.service';
 import { Article } from '../../../../core/models/article.models';
 import { ToastService } from '../../../../core/services/toast.service';
@@ -9,6 +9,7 @@ import { environment } from '../../../../../environments/environment';
     selector: 'app-admin-product-list',
     templateUrl: './product-list.component.html',
     standalone: false,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./product-list.component.scss']
 })
 export class ProductListComponent implements OnInit, OnDestroy {

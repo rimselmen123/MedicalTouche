@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ReclamationService } from '../../../../core/services/reclamation.service';
@@ -9,6 +9,7 @@ import { CreateReclamationRequest } from 'src/app/core/models/reclamation.models
     selector: 'app-client-reclamation-create',
     templateUrl: './reclamation-create.component.html',
     standalone: false,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./reclamation-create.component.scss']
 })
 export class ClientReclamationCreateComponent {

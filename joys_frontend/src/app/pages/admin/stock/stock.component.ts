@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StockService } from '../../../core/services/stock.service';
 import { ArticleService } from '../../../core/services/article.service';
@@ -10,6 +10,7 @@ import { Article } from '../../../core/models/article.models';
     selector: 'app-stock',
     standalone: false,
     templateUrl: './stock.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./stock.component.scss']
 })
 export class StockComponent implements OnInit {

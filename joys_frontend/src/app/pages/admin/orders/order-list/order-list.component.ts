@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { OrderService } from '../../../../core/services/order.service';
 import { Order } from '../../../../core/models/order.models';
 import { ToastService } from '../../../../core/services/toast.service';
@@ -21,6 +21,7 @@ const DEFAULT_STATUS = { label: '—', css: 'pending', step: 0 };
     selector: 'app-admin-order-list',
     templateUrl: './order-list.component.html',
     standalone: false,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./order-list.component.scss']
 })
 export class OrderListComponent implements OnInit {

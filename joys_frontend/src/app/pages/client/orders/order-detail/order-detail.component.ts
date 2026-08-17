@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OrderService } from '../../../../core/services/order.service';
 import { Order, PAYMENT_METHOD_MAP } from '../../../../core/models/order.models';
@@ -39,6 +39,7 @@ const STEP_ORDER = ['Pending', 'AwaitingPayment', 'Paid', 'Preparing', 'Ready', 
     selector: 'app-client-order-detail',
     templateUrl: './order-detail.component.html',
     standalone: false,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./order-detail.component.scss']
 })
 export class ClientOrderDetailComponent implements OnInit {

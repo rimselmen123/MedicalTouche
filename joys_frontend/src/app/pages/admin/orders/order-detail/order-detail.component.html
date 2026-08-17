@@ -13,7 +13,7 @@
         <h1 class="order-num">#{{ order.orderNumber }}</h1>
         <span class="order-date">{{ order.createdAt | date:'dd MMMM yyyy, HH:mm' }}</span>
       </div>
-      <span class="status-chip" [ngClass]="isCanceled() ? 'canceled' : steps[currentStep()]?.css">
+      <span class="status-chip" [ngClass]="isCanceled() ? 'canceled' : $safeNavigationMigration(steps[currentStep()]?.css)">
         {{ statusLabel(order.status) }}
       </span>
     </div>

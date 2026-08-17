@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReclamationService } from '../../../../core/services/reclamation.service';
@@ -9,6 +9,7 @@ import { ToastService } from '../../../../core/services/toast.service';
   selector: 'app-admin-reclamation-detail',
   templateUrl: './reclamation-detail.component.html',
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./reclamation-detail.component.scss']
 })
 export class ReclamationDetailComponent implements OnInit {

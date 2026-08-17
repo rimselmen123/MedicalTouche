@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 
@@ -6,6 +6,7 @@ import { filter, map } from 'rxjs/operators';
     selector: 'app-shell',
     templateUrl: './shell.component.html',
     styleUrls: ['./shell.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ShellComponent {

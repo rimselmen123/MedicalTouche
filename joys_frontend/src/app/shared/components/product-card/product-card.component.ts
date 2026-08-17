@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Article } from '../../../core/models/article.models';
 import { Router } from '@angular/router';
 
@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
     selector: 'app-product-card',
     standalone: false,
     templateUrl: './product-card.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./product-card.component.scss']
 })
 export class ProductCardComponent implements OnInit {

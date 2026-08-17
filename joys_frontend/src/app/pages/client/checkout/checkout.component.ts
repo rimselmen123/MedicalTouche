@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CartService } from '../../../core/services/cart.service';
@@ -11,6 +11,7 @@ import { Address, CreateOrderRequest } from '../../../core/models/order.models';
   selector: 'app-checkout',
   templateUrl: './checkout.component.html',
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./checkout.component.scss']
 })
 export class CheckoutComponent implements OnInit {

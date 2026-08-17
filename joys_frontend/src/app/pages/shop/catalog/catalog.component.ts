@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ArticleService } from '../../../core/services/article.service';
 import { Category, Article } from '../../../core/models/article.models';
@@ -9,6 +9,7 @@ import { environment } from 'src/environments/environment';
     selector: 'app-catalog',
     standalone: false,
     templateUrl: './catalog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./catalog.component.scss']
 })
 export class CatalogComponent implements OnInit {
