@@ -1,136 +1,152 @@
 <div class="profile-dashboard">
 
-    <header class="dashboard-header reveal">
-        <div class="container flex-between">
-            <div class="user-greeting">
-                <span class="label">Tableau de bord</span>
-                <h1 *ngIf="user$ | async as user">Ravie de vous revoir, <span class="serif">{{ user.fullName }}</span>.
-                </h1>
-            </div>
-            <button (click)="logout()" class="btn btn-outline" style="padding: 12px 24px; font-size: 0.7rem;">
-                Déconnexion
-            </button>
-        </div>
-    </header>
-
-    <div class="container dashboard-content">
-
-        <!-- Summary Cards -->
-        <div class="dashboard-summary reveal delay-1">
-            <a routerLink="/client/orders" class="summary-card glass">
-                <div class="card-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="1.5">
-                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <path d="M16 10a4 4 0 0 1-8 0"></path>
-                    </svg>
-                </div>
-                <div class="card-text">
-                    <h3>Mes Commandes</h3>
-                    <p>Historique et suivi</p>
-                </div>
-                <div class="card-arrow">→</div>
-            </a>
-
-            <a routerLink="/client/reclamations" class="summary-card glass">
-                <div class="card-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="1.5">
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                    </svg>
-                </div>
-                <div class="card-text">
-                    <h3>Mes Réclamations</h3>
-                    <p>Assistance et retours</p>
-                </div>
-                <div class="card-arrow">→</div>
-            </a>
-        </div>
-
-        <div class="dashboard-grid">
-
-            <!-- Address Section -->
-            <section class="address-section reveal delay-2">
-                <div class="section-top flex-between">
-                    <h2 class="section-title">Carnet d'Adresses</h2>
-                    <button (click)="showAddressForm = !showAddressForm" class="btn btn-outline"
-                        style="padding: 8px 16px; font-size: 0.6rem;">
-                        {{ showAddressForm ? 'Fermer' : '+ Ajouter' }}
-                    </button>
-                </div>
-
-                <div class="form-panel glass" *ngIf="showAddressForm">
-                    <form [formGroup]="addressForm" (ngSubmit)="createAddress()" class="minimal-form">
-                        <div class="form-grid">
-                            <div class="form-group"><input formControlName="label" class="input-minimal"
-                                    placeholder="Libellé (ex: Maison)"></div>
-                            <div class="form-group"><input formControlName="fullName" class="input-minimal"
-                                    placeholder="Nom complet"></div>
-                            <div class="form-group"><input formControlName="phone" class="input-minimal"
-                                    placeholder="Téléphone"></div>
-                            <div class="form-group full"><input formControlName="line1" class="input-minimal"
-                                    placeholder="Adresse (Ligne 1)"></div>
-                            <div class="form-group"><input formControlName="city" class="input-minimal"
-                                    placeholder="Ville"></div>
-                            <div class="form-group"><input formControlName="postalCode" class="input-minimal"
-                                    placeholder="Code Postal"></div>
-                        </div>
-                        <button type="submit" [disabled]="addressForm.invalid"
-                            class="btn btn-primary full-width">Enregistrer</button>
-                    </form>
-                </div>
-
-                <div class="addresses-grid" *ngIf="!loadingAddresses">
-                    <div *ngFor="let addr of addresses" class="address-item glass">
-                        <div class="item-header">
-                            <span class="tag">{{ addr.label }}</span>
-                            <span *ngIf="addr.isDefault" class="default">Par défaut</span>
-                        </div>
-                        <p class="address-text">
-                            <strong>{{ addr.fullName }}</strong><br>
-                            {{ addr.line1 }}<br>
-                            {{ addr.postalCode }} {{ addr.city }}
-                        </p>
-                    </div>
-
-                    <div *ngIf="addresses.length === 0 && !showAddressForm" class="empty-state">
-                        <p>Aucune adresse enregistrée.</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Account Settings -->
-            <section class="settings-section reveal delay-3">
-                <h2 class="section-title">Informations Personnelles</h2>
-                <div class="settings-card glass" *ngIf="user$ | async as user">
-                    <div class="info-row">
-                        <span class="info-label">Email</span>
-                        <span class="info-value">{{ user.email }}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Nom complet</span>
-                        <span class="info-value">{{ user.fullName }}</span>
-                    </div>
-
-                    <div class="info-row" *ngIf="user.roles && user.roles.length > 0">
-                        <span class="info-label">Rôle</span>
-                        <span class="info-value">
-                            <span class="badge" [class.badge-admin]="user.roles.includes('Admin')">
-                                {{ user.roles.includes('Admin') ? 'Administrateur' : 'Client' }}
-                            </span>
-                        </span>
-                    </div>
-                    <div class="info-row" *ngIf="user.roles.includes('Admin')">
-                        <span class="info-label">Accès Rapide</span>
-                        <span class="info-value">
-                            <a routerLink="/admin/dashboard" class="link serif">Accéder au Panel Admin →</a>
-                        </span>
-                    </div>
-                </div>
-            </section>
-
-        </div>
+  <header class="dashboard-header reveal">
+    <div class="container flex-between">
+      <div class="user-greeting">
+        <span class="label">Tableau de bord</span>
+        @if (user$ | async; as user) {
+          <h1>Ravie de vous revoir, <span class="serif">{{ user.fullName }}</span>.
+        </h1>
+      }
     </div>
+    <button (click)="logout()" class="btn btn-outline" style="padding: 12px 24px; font-size: 0.7rem;">
+      Déconnexion
+    </button>
+  </div>
+</header>
+
+<div class="container dashboard-content">
+
+  <!-- Summary Cards -->
+  <div class="dashboard-summary reveal delay-1">
+    <a routerLink="/client/orders" class="summary-card glass">
+      <div class="card-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="1.5">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+      </div>
+      <div class="card-text">
+        <h3>Mes Commandes</h3>
+        <p>Historique et suivi</p>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a routerLink="/client/reclamations" class="summary-card glass">
+      <div class="card-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="1.5">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+      </div>
+      <div class="card-text">
+        <h3>Mes Réclamations</h3>
+        <p>Assistance et retours</p>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+  </div>
+
+  <div class="dashboard-grid">
+
+    <!-- Address Section -->
+    <section class="address-section reveal delay-2">
+      <div class="section-top flex-between">
+        <h2 class="section-title">Carnet d'Adresses</h2>
+        <button (click)="showAddressForm = !showAddressForm" class="btn btn-outline"
+          style="padding: 8px 16px; font-size: 0.6rem;">
+          {{ showAddressForm ? 'Fermer' : '+ Ajouter' }}
+        </button>
+      </div>
+
+      @if (showAddressForm) {
+        <div class="form-panel glass">
+          <form [formGroup]="addressForm" (ngSubmit)="createAddress()" class="minimal-form">
+            <div class="form-grid">
+              <div class="form-group"><input formControlName="label" class="input-minimal"
+              placeholder="Libellé (ex: Maison)"></div>
+              <div class="form-group"><input formControlName="fullName" class="input-minimal"
+              placeholder="Nom complet"></div>
+              <div class="form-group"><input formControlName="phone" class="input-minimal"
+              placeholder="Téléphone"></div>
+              <div class="form-group full"><input formControlName="line1" class="input-minimal"
+              placeholder="Adresse (Ligne 1)"></div>
+              <div class="form-group"><input formControlName="city" class="input-minimal"
+              placeholder="Ville"></div>
+              <div class="form-group"><input formControlName="postalCode" class="input-minimal"
+              placeholder="Code Postal"></div>
+            </div>
+            <button type="submit" [disabled]="addressForm.invalid"
+            class="btn btn-primary full-width">Enregistrer</button>
+          </form>
+        </div>
+      }
+
+      @if (!loadingAddresses) {
+        <div class="addresses-grid">
+          @for (addr of addresses; track addr) {
+            <div class="address-item glass">
+              <div class="item-header">
+                <span class="tag">{{ addr.label }}</span>
+                @if (addr.isDefault) {
+                  <span class="default">Par défaut</span>
+                }
+              </div>
+              <p class="address-text">
+                <strong>{{ addr.fullName }}</strong><br>
+                {{ addr.line1 }}<br>
+                {{ addr.postalCode }} {{ addr.city }}
+              </p>
+            </div>
+          }
+          @if (addresses.length === 0 && !showAddressForm) {
+            <div class="empty-state">
+              <p>Aucune adresse enregistrée.</p>
+            </div>
+          }
+        </div>
+      }
+    </section>
+
+    <!-- Account Settings -->
+    <section class="settings-section reveal delay-3">
+      <h2 class="section-title">Informations Personnelles</h2>
+      @if (user$ | async; as user) {
+        <div class="settings-card glass">
+          <div class="info-row">
+            <span class="info-label">Email</span>
+            <span class="info-value">{{ user.email }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Nom complet</span>
+            <span class="info-value">{{ user.fullName }}</span>
+          </div>
+          @if (user.roles && user.roles.length > 0) {
+            <div class="info-row">
+              <span class="info-label">Rôle</span>
+              <span class="info-value">
+                <span class="badge" [class.badge-admin]="user.roles.includes('Admin')">
+                  {{ user.roles.includes('Admin') ? 'Administrateur' : 'Client' }}
+                </span>
+              </span>
+            </div>
+          }
+          @if (user.roles.includes('Admin')) {
+            <div class="info-row">
+              <span class="info-label">Accès Rapide</span>
+              <span class="info-value">
+                <a routerLink="/admin/dashboard" class="link serif">Accéder au Panel Admin →</a>
+              </span>
+            </div>
+          }
+        </div>
+      }
+    </section>
+
+  </div>
+</div>
 
 </div>

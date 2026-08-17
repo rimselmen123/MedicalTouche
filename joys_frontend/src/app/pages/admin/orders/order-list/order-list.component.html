@@ -1,103 +1,119 @@
 <div class="page-container">
 
-    <!-- Header -->
-    <div class="page-head">
-        <div>
-            <h1 class="page-title">Commandes</h1>
-            <p class="page-sub">{{ totalCount }} commande{{ totalCount > 1 ? 's' : '' }} au total</p>
-        </div>
+  <!-- Header -->
+  <div class="page-head">
+    <div>
+      <h1 class="page-title">Commandes</h1>
+      <p class="page-sub">{{ totalCount }} commande{{ totalCount > 1 ? 's' : '' }} au total</p>
     </div>
+  </div>
 
-    <!-- Filters -->
-    <div class="filters-bar">
-        <div class="filter-pills">
-            <button class="pill" [class.active]="filterStatus === ''" (click)="filterStatus = ''; onFilterChange()">
-                Toutes
-            </button>
-            <button *ngFor="let f of statusFilters" class="pill"
-                    [class.active]="filterStatus === f.values"
-                    (click)="filterStatus = f.values; onFilterChange()">
-                {{ f.label }}
-            </button>
-        </div>
-        <div class="search-box">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-            </svg>
-            <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()"
-                   placeholder="Rechercher par n°, client...">
-        </div>
+  <!-- Filters -->
+  <div class="filters-bar">
+    <div class="filter-pills">
+      <button class="pill" [class.active]="filterStatus === ''" (click)="filterStatus = ''; onFilterChange()">
+        Toutes
+      </button>
+      @for (f of statusFilters; track f) {
+        <button class="pill"
+          [class.active]="filterStatus === f.values"
+          (click)="filterStatus = f.values; onFilterChange()">
+          {{ f.label }}
+        </button>
+      }
     </div>
+    <div class="search-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+      </svg>
+      <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()"
+        placeholder="Rechercher par n°, client...">
+    </div>
+  </div>
 
-    <!-- Loading -->
-    <div *ngIf="loading" class="loading-state">
-        <app-loading label="Chargement..."></app-loading>
+  <!-- Loading -->
+  @if (loading) {
+    <div class="loading-state">
+      <app-loading label="Chargement..."></app-loading>
     </div>
+  }
 
-    <!-- Orders Table -->
-    <div class="orders-table" *ngIf="!loading && orders.length > 0">
-        <table>
-            <thead>
-                <tr>
-                    <th>Commande</th>
-                    <th>Client</th>
-                    <th>Total</th>
-                    <th>Statut</th>
-                    <th class="th-actions">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let order of orders">
-                    <td>
-                        <a [routerLink]="['/admin/orders', order.id]" class="order-ref">#{{ order.orderNumber }}</a>
-                        <span class="order-date">{{ order.createdAt | date:'dd/MM/yy' }}</span>
-                    </td>
-                    <td>
-                        <span class="client-name">{{ order.customerFullName || order.customerEmail || '—' }}</span>
-                    </td>
-                    <td>
-                        <span class="order-total">{{ order.total | number:'1.2-2' }} <small>TND</small></span>
-                    </td>
-                    <td>
-                        <span class="status-chip" [ngClass]="status(order.status).css">
-                            {{ status(order.status).label }}
-                        </span>
-                    </td>
-                    <td class="td-actions">
-                        <button *ngIf="getNextAction(order) as action"
-                                class="btn-advance"
-                                (click)="advance(order)">
-                            {{ action.label }}
-                        </button>
-                        <button *ngIf="canCancel(order)"
-                                class="btn-cancel"
-                                (click)="cancel(order)"
-                                title="Annuler">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                            </svg>
-                        </button>
-                        <a [routerLink]="['/admin/orders', order.id]" class="btn-view" title="Détails">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M5 12h14M12 5l7 7-7 7"/>
-                            </svg>
-                        </a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+  <!-- Orders Table -->
+  @if (!loading && orders.length > 0) {
+    <div class="orders-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Commande</th>
+            <th>Client</th>
+            <th>Total</th>
+            <th>Statut</th>
+            <th class="th-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (order of orders; track order) {
+            <tr>
+              <td>
+                <a [routerLink]="['/admin/orders', order.id]" class="order-ref">#{{ order.orderNumber }}</a>
+                <span class="order-date">{{ order.createdAt | date:'dd/MM/yy' }}</span>
+              </td>
+              <td>
+                <span class="client-name">{{ order.customerFullName || order.customerEmail || '—' }}</span>
+              </td>
+              <td>
+                <span class="order-total">{{ order.total | number:'1.2-2' }} <small>TND</small></span>
+              </td>
+              <td>
+                <span class="status-chip" [ngClass]="status(order.status).css">
+                  {{ status(order.status).label }}
+                </span>
+              </td>
+              <td class="td-actions">
+                @if (getNextAction(order); as action) {
+                  <button
+                    class="btn-advance"
+                    (click)="advance(order)">
+                    {{ action.label }}
+                  </button>
+                }
+                @if (canCancel(order)) {
+                  <button
+                    class="btn-cancel"
+                    (click)="cancel(order)"
+                    title="Annuler">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                  </button>
+                }
+                <a [routerLink]="['/admin/orders', order.id]" class="btn-view" title="Détails">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                  </svg>
+                </a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
     </div>
+  }
 
-    <!-- Empty State -->
-    <div class="empty-state" *ngIf="!loading && orders.length === 0">
-        <p>Aucune commande trouvée.</p>
+  <!-- Empty State -->
+  @if (!loading && orders.length === 0) {
+    <div class="empty-state">
+      <p>Aucune commande trouvée.</p>
     </div>
+  }
 
-    <!-- Pagination -->
-    <div class="pagination" *ngIf="!loading && totalPages > 1">
-        <button (click)="prevPage()" [disabled]="currentPage === 1" class="pg-btn">← Précédent</button>
-        <span class="pg-info">{{ currentPage }} / {{ totalPages }}</span>
-        <button (click)="nextPage()" [disabled]="currentPage >= totalPages" class="pg-btn">Suivant →</button>
+  <!-- Pagination -->
+  @if (!loading && totalPages > 1) {
+    <div class="pagination">
+      <button (click)="prevPage()" [disabled]="currentPage === 1" class="pg-btn">← Précédent</button>
+      <span class="pg-info">{{ currentPage }} / {{ totalPages }}</span>
+      <button (click)="nextPage()" [disabled]="currentPage >= totalPages" class="pg-btn">Suivant →</button>
     </div>
+  }
 
 </div>

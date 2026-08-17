@@ -1,11 +1,15 @@
 <div class="app-layout">
 
-    <app-navbar class="layout-nav" *ngIf="!isAdmin"></app-navbar>
+  @if (!isAdmin) {
+    <app-navbar class="layout-nav"></app-navbar>
+  }
 
-    <main class="layout-main">
-        <router-outlet></router-outlet>
-    </main>
+  <main class="layout-main">
+    <router-outlet></router-outlet>
+  </main>
 
-    <app-footer class="layout-footer" *ngIf="!isAdmin"></app-footer>
+  @if (!isAdmin) {
+    <app-footer class="layout-footer"></app-footer>
+  }
 
 </div>

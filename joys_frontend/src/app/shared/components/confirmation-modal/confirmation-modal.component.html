@@ -1,20 +1,24 @@
 <div class="modal-overlay">
-    <div class="modal-backdrop" (click)="onCancel()"></div>
+  <div class="modal-backdrop" (click)="onCancel()"></div>
 
-    <div class="modal-card">
-        <div class="modal-icon" [class.destructive]="isDestructive">
-            <span *ngIf="isDestructive">!</span>
-            <span *ngIf="!isDestructive">?</span>
-        </div>
-
-        <h3 class="modal-title">{{ title }}</h3>
-        <p class="modal-message">{{ message }}</p>
-
-        <div class="modal-actions">
-            <button class="btn-cancel" (click)="onCancel()">{{ cancelText }}</button>
-            <button class="btn-confirm" [class.destructive]="isDestructive" (click)="onConfirm()">
-                {{ confirmText }}
-            </button>
-        </div>
+  <div class="modal-card">
+    <div class="modal-icon" [class.destructive]="isDestructive">
+      @if (isDestructive) {
+        <span>!</span>
+      }
+      @if (!isDestructive) {
+        <span>?</span>
+      }
     </div>
+
+    <h3 class="modal-title">{{ title }}</h3>
+    <p class="modal-message">{{ message }}</p>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" (click)="onCancel()">{{ cancelText }}</button>
+      <button class="btn-confirm" [class.destructive]="isDestructive" (click)="onConfirm()">
+        {{ confirmText }}
+      </button>
+    </div>
+  </div>
 </div>

@@ -1,85 +1,99 @@
 <div class="catalog-page">
 
-    <!-- Header -->
-    <header class="catalog-hero">
-        <div class="catalog-hero-bg">
-            <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1920&q=80&auto=format&fit=crop"
-                 alt="Joy's Catalogue" class="catalog-hero-img">
-            <div class="catalog-hero-overlay"></div>
-        </div>
-        <div class="container catalog-hero-content">
-            <span class="catalog-badge">La Collection</span>
-            <h1 class="catalog-title">Notre Catalogue</h1>
-            <p class="catalog-subtitle">Découvrez toute notre sélection de produits de qualité.</p>
-        </div>
-    </header>
-
-    <div class="container catalog-container">
-
-        <!-- Filter Bar -->
-        <div class="filter-bar reveal">
-            <div class="filter-search">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-                </svg>
-                <input type="text" placeholder="Rechercher un produit..." [value]="searchQuery" (input)="onSearch($event)">
-            </div>
-
-            <div class="filter-pills">
-                <button class="pill" [class.active]="!selectedCategoryId" (click)="selectCategory(null)">
-                    Tout
-                </button>
-                <button *ngFor="let cat of categories" class="pill"
-                    [class.active]="selectedCategoryId === cat.id" (click)="selectCategory(cat.id)">
-                    {{ cat.name }}
-                </button>
-            </div>
-        </div>
-
-        <!-- Loader -->
-        <div *ngIf="loading" class="loader-wrap">
-            <div class="loader"></div>
-        </div>
-
-        <!-- Product Grid -->
-        <div class="product-grid reveal delay-1" *ngIf="!loading && articles.length > 0">
-            <app-product-card *ngFor="let item of articles; let i = index" [article]="item"
-                [style.animation-delay]="(i * 40) + 'ms'">
-            </app-product-card>
-        </div>
-
-        <!-- Empty State -->
-        <div *ngIf="!loading && articles.length === 0" class="empty-state reveal">
-            <div class="empty-icon">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-                    <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-                    <path d="M8 11h6"/>
-                </svg>
-            </div>
-            <h2>Aucun résultat</h2>
-            <p>Essayez une autre recherche ou réinitialisez les filtres.</p>
-            <button (click)="resetFilters()" class="btn-reset">Réinitialiser</button>
-        </div>
-
-        <!-- Pagination -->
-        <div class="pagination reveal delay-2" *ngIf="totalPages > 1 && !loading">
-            <button class="page-arrow" [disabled]="currentPage === 1" (click)="onPageChange(currentPage - 1)">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <path d="M15 18l-6-6 6-6"/>
-                </svg>
-            </button>
-            <div class="page-nums">
-                <button *ngFor="let p of pages" class="page-num" [class.active]="p === currentPage"
-                    (click)="onPageChange(p)">
-                    {{ p }}
-                </button>
-            </div>
-            <button class="page-arrow" [disabled]="currentPage === totalPages" (click)="onPageChange(currentPage + 1)">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <path d="M9 18l6-6-6-6"/>
-                </svg>
-            </button>
-        </div>
-
+  <!-- Header -->
+  <header class="catalog-hero">
+    <div class="catalog-hero-bg">
+      <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1920&q=80&auto=format&fit=crop"
+        alt="Joy's Catalogue" class="catalog-hero-img">
+      <div class="catalog-hero-overlay"></div>
     </div>
+    <div class="container catalog-hero-content">
+      <span class="catalog-badge">La Collection</span>
+      <h1 class="catalog-title">Notre Catalogue</h1>
+      <p class="catalog-subtitle">Découvrez toute notre sélection de produits de qualité.</p>
+    </div>
+  </header>
+
+  <div class="container catalog-container">
+
+    <!-- Filter Bar -->
+    <div class="filter-bar reveal">
+      <div class="filter-search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+        </svg>
+        <input type="text" placeholder="Rechercher un produit..." [value]="searchQuery" (input)="onSearch($event)">
+      </div>
+
+      <div class="filter-pills">
+        <button class="pill" [class.active]="!selectedCategoryId" (click)="selectCategory(null)">
+          Tout
+        </button>
+        @for (cat of categories; track cat) {
+          <button class="pill"
+            [class.active]="selectedCategoryId === cat.id" (click)="selectCategory(cat.id)">
+            {{ cat.name }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Loader -->
+    @if (loading) {
+      <div class="loader-wrap">
+        <div class="loader"></div>
+      </div>
+    }
+
+    <!-- Product Grid -->
+    @if (!loading && articles.length > 0) {
+      <div class="product-grid reveal delay-1">
+        @for (item of articles; track item; let i = $index) {
+          <app-product-card [article]="item"
+            [style.animation-delay]="(i * 40) + 'ms'">
+          </app-product-card>
+        }
+      </div>
+    }
+
+    <!-- Empty State -->
+    @if (!loading && articles.length === 0) {
+      <div class="empty-state reveal">
+        <div class="empty-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+            <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+            <path d="M8 11h6"/>
+          </svg>
+        </div>
+        <h2>Aucun résultat</h2>
+        <p>Essayez une autre recherche ou réinitialisez les filtres.</p>
+        <button (click)="resetFilters()" class="btn-reset">Réinitialiser</button>
+      </div>
+    }
+
+    <!-- Pagination -->
+    @if (totalPages > 1 && !loading) {
+      <div class="pagination reveal delay-2">
+        <button class="page-arrow" [disabled]="currentPage === 1" (click)="onPageChange(currentPage - 1)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+        </button>
+        <div class="page-nums">
+          @for (p of pages; track p) {
+            <button class="page-num" [class.active]="p === currentPage"
+              (click)="onPageChange(p)">
+              {{ p }}
+            </button>
+          }
+        </div>
+        <button class="page-arrow" [disabled]="currentPage === totalPages" (click)="onPageChange(currentPage + 1)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </button>
+      </div>
+    }
+
+  </div>
 </div>

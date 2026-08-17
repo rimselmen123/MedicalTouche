@@ -1,139 +1,132 @@
-<div class="cart-page" *ngIf="!loading; else loaderTpl">
-
+@if (!loading) {
+  <div class="cart-page">
     <div class="cart-container">
-
-        <div *ngIf="cart && cart.items.length > 0; else emptyTpl">
-
-            <!-- Header -->
-            <div class="cart-header reveal">
-                <div class="cart-header-left">
-                    <span class="cart-label">Panier</span>
-                    <h1 class="cart-title">Votre sélection</h1>
-                </div>
-                <span class="cart-count">{{ cart.items.length }} article{{ cart.items.length > 1 ? 's' : '' }}</span>
+      @if (cart && cart.items.length > 0) {
+        <div>
+          <!-- Header -->
+          <div class="cart-header reveal">
+            <div class="cart-header-left">
+              <span class="cart-label">Panier</span>
+              <h1 class="cart-title">Votre sélection</h1>
             </div>
-
-            <div class="cart-grid">
-
-                <!-- Items -->
-                <div class="cart-items">
-                    <div *ngFor="let item of cart.items; let i = index"
-                         class="cart-item reveal"
-                         [style.animation-delay]="(i * 80) + 'ms'">
-
-                        <!-- Image -->
-                        <a [routerLink]="['/shop/products', item.articleId]" class="item-image">
-                            <img [src]="item.imageUrl | premiumImg" [alt]="item.name">
-                        </a>
-
-                        <!-- Details -->
-                        <div class="item-details">
-                            <div class="item-top">
-                                <div class="item-info">
-                                    <a [routerLink]="['/shop/products', item.articleId]" class="item-name">{{ item.name }}</a>
-                                    <span class="item-variant" *ngIf="item.variantName">{{ item.variantName }}</span>
-                                    <span class="item-unit-price">{{ item.unitPrice | number:'1.3-3' }} TND</span>
-                                </div>
-                                <span class="item-total">{{ item.lineTotal | number:'1.3-3' }} TND</span>
-                            </div>
-
-                            <div class="item-bottom">
-                                <div class="item-qty">
-                                    <button class="qty-btn" (click)="updateQuantity(item.id, item.quantity - 1)" [disabled]="item.quantity <= 1">
-                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <line x1="5" y1="12" x2="19" y2="12"/>
-                                        </svg>
-                                    </button>
-                                    <span class="qty-value">{{ item.quantity }}</span>
-                                    <button class="qty-btn" (click)="updateQuantity(item.id, item.quantity + 1)">
-                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-                                        </svg>
-                                    </button>
-                                </div>
-                                <button class="item-remove" (click)="removeItem(item.id)">Retirer</button>
-                            </div>
-                        </div>
+            <span class="cart-count">{{ cart.items.length }} article{{ cart.items.length > 1 ? 's' : '' }}</span>
+          </div>
+          <div class="cart-grid">
+            <!-- Items -->
+            <div class="cart-items">
+              @for (item of cart.items; track item; let i = $index) {
+                <div
+                  class="cart-item reveal"
+                  [style.animation-delay]="(i * 80) + 'ms'">
+                  <!-- Image -->
+                  <a [routerLink]="['/shop/products', item.articleId]" class="item-image">
+                    <img [src]="item.imageUrl | premiumImg" [alt]="item.name">
+                  </a>
+                  <!-- Details -->
+                  <div class="item-details">
+                    <div class="item-top">
+                      <div class="item-info">
+                        <a [routerLink]="['/shop/products', item.articleId]" class="item-name">{{ item.name }}</a>
+                        @if (item.variantName) {
+                          <span class="item-variant">{{ item.variantName }}</span>
+                        }
+                        <span class="item-unit-price">{{ item.unitPrice | number:'1.3-3' }} TND</span>
+                      </div>
+                      <span class="item-total">{{ item.lineTotal | number:'1.3-3' }} TND</span>
                     </div>
-
-                    <div class="cart-items-footer">
-                        <button class="clear-btn" (click)="clearCart()">Vider le panier</button>
-                        <a routerLink="/shop/catalog" class="continue-link">Continuer mes achats</a>
-                    </div>
-                </div>
-
-                <!-- Summary -->
-                <aside class="cart-summary">
-                    <div class="summary-card">
-                        <h2 class="summary-title">Résumé</h2>
-
-                        <div class="summary-rows">
-                            <div class="summary-row">
-                                <span>Sous-total</span>
-                                <span>{{ cart.subtotal | number:'1.3-3' }} TND</span>
-                            </div>
-                            <div class="summary-row">
-                                <span>Livraison</span>
-                                <span *ngIf="cart.deliveryFee > 0">{{ cart.deliveryFee | number:'1.3-3' }} TND</span>
-                                <span *ngIf="cart.deliveryFee === 0" class="free-tag">Gratuit</span>
-                            </div>
-                        </div>
-
-                        <div class="summary-total">
-                            <span>Total</span>
-                            <span class="total-value">{{ cart.total | number:'1.3-3' }} <small>TND</small></span>
-                        </div>
-
-                        <button class="checkout-btn" (click)="goToCheckout()">
-                            Passer la commande
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M5 12h14M12 5l7 7-7 7"/>
-                            </svg>
+                    <div class="item-bottom">
+                      <div class="item-qty">
+                        <button class="qty-btn" (click)="updateQuantity(item.id, item.quantity - 1)" [disabled]="item.quantity <= 1">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                          </svg>
                         </button>
-
-                        <div class="summary-trust">
-                            <span>
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                                </svg>
-                                Paiement sécurisé
-                            </span>
-                            <span>
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                    <rect x="1" y="3" width="15" height="13" rx="2"/>
-                                    <path d="M16 8h4l3 3v5a2 2 0 0 1-2 2h-5"/>
-                                    <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
-                                </svg>
-                                Livraison rapide
-                            </span>
-                        </div>
+                        <span class="qty-value">{{ item.quantity }}</span>
+                        <button class="qty-btn" (click)="updateQuantity(item.id, item.quantity + 1)">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                          </svg>
+                        </button>
+                      </div>
+                      <button class="item-remove" (click)="removeItem(item.id)">Retirer</button>
                     </div>
-                </aside>
-
-            </div>
-        </div>
-
-        <!-- Empty Cart -->
-        <ng-template #emptyTpl>
-            <div class="empty-cart reveal">
-                <div class="empty-icon">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-                        <line x1="3" y1="6" x2="21" y2="6"/>
-                        <path d="M16 10a4 4 0 01-8 0"/>
-                    </svg>
+                  </div>
                 </div>
-                <h2 class="empty-title">Votre panier est vide</h2>
-                <p class="empty-desc">Explorez notre boutique et trouvez des pièces qui vous plaisent.</p>
-                <a routerLink="/shop/catalog" class="empty-btn">Découvrir la boutique</a>
+              }
+              <div class="cart-items-footer">
+                <button class="clear-btn" (click)="clearCart()">Vider le panier</button>
+                <a routerLink="/shop/catalog" class="continue-link">Continuer mes achats</a>
+              </div>
             </div>
-        </ng-template>
-
+            <!-- Summary -->
+            <aside class="cart-summary">
+              <div class="summary-card">
+                <h2 class="summary-title">Résumé</h2>
+                <div class="summary-rows">
+                  <div class="summary-row">
+                    <span>Sous-total</span>
+                    <span>{{ cart.subtotal | number:'1.3-3' }} TND</span>
+                  </div>
+                  <div class="summary-row">
+                    <span>Livraison</span>
+                    @if (cart.deliveryFee > 0) {
+                      <span>{{ cart.deliveryFee | number:'1.3-3' }} TND</span>
+                    }
+                    @if (cart.deliveryFee === 0) {
+                      <span class="free-tag">Gratuit</span>
+                    }
+                  </div>
+                </div>
+                <div class="summary-total">
+                  <span>Total</span>
+                  <span class="total-value">{{ cart.total | number:'1.3-3' }} <small>TND</small></span>
+                </div>
+                <button class="checkout-btn" (click)="goToCheckout()">
+                  Passer la commande
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                  </svg>
+                </button>
+                <div class="summary-trust">
+                  <span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                    Paiement sécurisé
+                  </span>
+                  <span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <rect x="1" y="3" width="15" height="13" rx="2"/>
+                      <path d="M16 8h4l3 3v5a2 2 0 0 1-2 2h-5"/>
+                      <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+                    </svg>
+                    Livraison rapide
+                  </span>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      } @else {
+        <div class="empty-cart reveal">
+          <div class="empty-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 01-8 0"/>
+            </svg>
+          </div>
+          <h2 class="empty-title">Votre panier est vide</h2>
+          <p class="empty-desc">Explorez notre boutique et trouvez des pièces qui vous plaisent.</p>
+          <a routerLink="/shop/catalog" class="empty-btn">Découvrir la boutique</a>
+        </div>
+      }
+      <!-- Empty Cart -->
     </div>
-</div>
+  </div>
+} @else {
+  <div class="loader-screen">
+    <div class="loader-spinner"></div>
+  </div>
+}
 
-<ng-template #loaderTpl>
-    <div class="loader-screen">
-        <div class="loader-spinner"></div>
-    </div>
-</ng-template>

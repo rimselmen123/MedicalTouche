@@ -1,18 +1,20 @@
 <div class="empty-state-wrapper">
 
-    <div class="icon-circle reveal">
-        <span class="emoji-content">{{ emoji }}</span>
-    </div>
+  <div class="icon-circle reveal">
+    <span class="emoji-content">{{ emoji }}</span>
+  </div>
 
-    <div class="text-content reveal delay-1">
-        <h3 class="state-title">{{ title }}</h3>
-        <p class="state-desc" *ngIf="description">
-            {{ description }}
-        </p>
-    </div>
+  <div class="text-content reveal delay-1">
+    <h3 class="state-title">{{ title }}</h3>
+    @if (description) {
+      <p class="state-desc">
+        {{ description }}
+      </p>
+    }
+  </div>
 
-    <div class="action-slot reveal delay-2">
-        <ng-content></ng-content>
-    </div>
+  <div class="action-slot reveal delay-2">
+    <ng-content></ng-content>
+  </div>
 
 </div>

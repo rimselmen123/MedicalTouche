@@ -1,200 +1,204 @@
 <div class="page-container">
 
-    <div class="header-split reveal">
-        <app-page-header title="Produits" subtitle="Gestion de votre catalogue."></app-page-header>
+  <div class="header-split reveal">
+    <app-page-header title="Produits" subtitle="Gestion de votre catalogue."></app-page-header>
 
-        <a routerLink="/admin/products/new" class="btn-new-product">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            Cr&eacute;er un produit
+    <a routerLink="/admin/products/new" class="btn-new-product">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+      Cr&eacute;er un produit
+    </a>
+  </div>
+
+  @if (loading) {
+    <div class="loading-wrapper">
+      <app-loading label="Chargement du catalogue..."></app-loading>
+    </div>
+  }
+
+  <!-- EMPTY STATE -->
+  @if (!loading && articles.length === 0) {
+    <div class="empty-state-card reveal delay-1">
+      <div class="empty-state-inner">
+        <div class="empty-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+        </div>
+        <h3 class="empty-title">Aucun produit</h3>
+        <p class="empty-desc">Votre catalogue est vide pour le moment. Ajoutez votre premier produit pour commencer.</p>
+        <a routerLink="/admin/products/new" class="btn-create-first">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Cr&eacute;er votre premier produit
         </a>
+      </div>
     </div>
+  }
 
-    <div *ngIf="loading" class="loading-wrapper">
-        <app-loading label="Chargement du catalogue..."></app-loading>
-    </div>
-
-    <!-- EMPTY STATE -->
-    <div class="empty-state-card reveal delay-1" *ngIf="!loading && articles.length === 0">
-        <div class="empty-state-inner">
-            <div class="empty-icon">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <path d="M16 10a4 4 0 0 1-8 0"></path>
-                </svg>
-            </div>
-            <h3 class="empty-title">Aucun produit</h3>
-            <p class="empty-desc">Votre catalogue est vide pour le moment. Ajoutez votre premier produit pour commencer.</p>
-            <a routerLink="/admin/products/new" class="btn-create-first">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-                Cr&eacute;er votre premier produit
-            </a>
-        </div>
-    </div>
-
-    <!-- TABLE (desktop) -->
-    <div class="glass-table-container reveal delay-1" *ngIf="!loading && articles.length > 0">
-        <table class="editorial-table desktop-table">
-            <thead>
-                <tr>
-                    <th class="th-img">Aper&ccedil;u</th>
-                    <th class="th-main">D&eacute;signation</th>
-                    <th class="th-category">Cat&eacute;gorie</th>
-                    <th class="th-price">Prix</th>
-                    <th class="text-center th-status">Statut</th>
-                    <th class="text-right th-actions">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let item of articles; let i = index" class="table-row"
-                    [style.animation-delay]="(i * 30) + 'ms'">
-
-                    <td class="td-img">
-                        <div class="product-thumb">
-                            <img [src]="item.coverUrl | premiumImg" [alt]="item.title" loading="lazy" />
-                        </div>
-                    </td>
-
-                    <td class="td-main">
-                        <div class="product-info">
-                            <span class="product-name">{{ item.title }}</span>
-                            <span class="product-id">#{{ item.id }}</span>
-                        </div>
-                    </td>
-
-                    <td class="td-category">
-                        <span class="category-tag">{{ item.categoryName }}</span>
-                    </td>
-
-                    <td class="td-price">
-                        <span class="price-serif">{{ item.price | number:'1.3-3' }} <small>TND</small></span>
-                    </td>
-
-                    <td class="text-center td-status">
-                        <label class="switch" (click)="$event.stopPropagation()">
-                            <input type="checkbox" [checked]="item.isActive"
-                                (change)="toggleActive(item.id)">
-                            <span class="switch-track"></span>
-                        </label>
-                        <span class="switch-label" [class.active]="item.isActive">
-                            {{ item.isActive ? 'Actif' : 'Masqu&eacute;' }}
-                        </span>
-                    </td>
-
-                    <td class="text-right td-actions">
-                        <div class="actions-flex">
-                            <a class="btn-action btn-voir" [routerLink]="['/shop/products', item.id]"
-                                title="Voir dans la boutique">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                    <circle cx="12" cy="12" r="3"></circle>
-                                </svg>
-                                Voir
-                            </a>
-                            <a [routerLink]="['/admin/products', item.id]" class="btn-action btn-modifier"
-                                title="Modifier">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                </svg>
-                                Modifier
-                            </a>
-                            <button (click)="deleteArticle(item.id)" class="btn-action btn-supprimer"
-                                title="Supprimer">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="3 6 5 6 21 6"></polyline>
-                                    <path
-                                        d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
-                                    </path>
-                                </svg>
-                                Supprimer
-                            </button>
-                        </div>
-                    </td>
-
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- MOBILE CARDS -->
-        <div class="mobile-cards">
-            <div *ngFor="let item of articles; let i = index" class="mobile-card"
-                [style.animation-delay]="(i * 50) + 'ms'">
-                <div class="mobile-card-top">
-                    <div class="product-thumb">
-                        <img [src]="item.coverUrl | premiumImg" [alt]="item.title" loading="lazy" />
-                    </div>
-                    <div class="product-info">
-                        <span class="product-name">{{ item.title }}</span>
-                        <span class="product-id">#{{ item.id }} &middot; {{ item.categoryName }} &middot; {{ item.price | number:'1.3-3' }} TND</span>
-                    </div>
-                    <label class="switch" (click)="$event.stopPropagation()">
-                        <input type="checkbox" [checked]="item.isActive"
-                            (change)="toggleActive(item.id)">
-                        <span class="switch-track"></span>
-                    </label>
+  <!-- TABLE (desktop) -->
+  @if (!loading && articles.length > 0) {
+    <div class="glass-table-container reveal delay-1">
+      <table class="editorial-table desktop-table">
+        <thead>
+          <tr>
+            <th class="th-img">Aper&ccedil;u</th>
+            <th class="th-main">D&eacute;signation</th>
+            <th class="th-category">Cat&eacute;gorie</th>
+            <th class="th-price">Prix</th>
+            <th class="text-center th-status">Statut</th>
+            <th class="text-right th-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of articles; track item; let i = $index) {
+            <tr class="table-row"
+              [style.animation-delay]="(i * 30) + 'ms'">
+              <td class="td-img">
+                <div class="product-thumb">
+                  <img [src]="item.coverUrl | premiumImg" [alt]="item.title" loading="lazy" />
                 </div>
-                <div class="mobile-card-actions">
-                    <a class="btn-action btn-voir" [routerLink]="['/shop/products', item.id]">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                            <circle cx="12" cy="12" r="3"></circle>
-                        </svg>
-                        Voir
-                    </a>
-                    <a [routerLink]="['/admin/products', item.id]" class="btn-action btn-modifier">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                        </svg>
-                        Modifier
-                    </a>
-                    <button (click)="deleteArticle(item.id)" class="btn-action btn-supprimer">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="3 6 5 6 21 6"></polyline>
-                            <path
-                                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
-                            </path>
-                        </svg>
-                        Supprimer
-                    </button>
+              </td>
+              <td class="td-main">
+                <div class="product-info">
+                  <span class="product-name">{{ item.title }}</span>
+                  <span class="product-id">#{{ item.id }}</span>
                 </div>
+              </td>
+              <td class="td-category">
+                <span class="category-tag">{{ item.categoryName }}</span>
+              </td>
+              <td class="td-price">
+                <span class="price-serif">{{ item.price | number:'1.3-3' }} <small>TND</small></span>
+              </td>
+              <td class="text-center td-status">
+                <label class="switch" (click)="$event.stopPropagation()">
+                  <input type="checkbox" [checked]="item.isActive"
+                    (change)="toggleActive(item.id)">
+                  <span class="switch-track"></span>
+                </label>
+                <span class="switch-label" [class.active]="item.isActive">
+                  {{ item.isActive ? 'Actif' : 'Masqu&eacute;' }}
+                </span>
+              </td>
+              <td class="text-right td-actions">
+                <div class="actions-flex">
+                  <a class="btn-action btn-voir" [routerLink]="['/shop/products', item.id]"
+                    title="Voir dans la boutique">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    Voir
+                  </a>
+                  <a [routerLink]="['/admin/products', item.id]" class="btn-action btn-modifier"
+                    title="Modifier">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                    Modifier
+                  </a>
+                  <button (click)="deleteArticle(item.id)" class="btn-action btn-supprimer"
+                    title="Supprimer">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path
+                        d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                      </path>
+                    </svg>
+                    Supprimer
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      <!-- MOBILE CARDS -->
+      <div class="mobile-cards">
+        @for (item of articles; track item; let i = $index) {
+          <div class="mobile-card"
+            [style.animation-delay]="(i * 50) + 'ms'">
+            <div class="mobile-card-top">
+              <div class="product-thumb">
+                <img [src]="item.coverUrl | premiumImg" [alt]="item.title" loading="lazy" />
+              </div>
+              <div class="product-info">
+                <span class="product-name">{{ item.title }}</span>
+                <span class="product-id">#{{ item.id }} &middot; {{ item.categoryName }} &middot; {{ item.price | number:'1.3-3' }} TND</span>
+              </div>
+              <label class="switch" (click)="$event.stopPropagation()">
+                <input type="checkbox" [checked]="item.isActive"
+                  (change)="toggleActive(item.id)">
+                <span class="switch-track"></span>
+              </label>
             </div>
-        </div>
-    </div>
-
-    <!-- Delete Confirmation Modal -->
-    <div class="modal-overlay" *ngIf="showDeleteModal" (click)="cancelDelete()">
-        <div class="glass-modal-card" (click)="$event.stopPropagation()">
-            <div class="modal-icon-danger">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="3 6 5 6 21 6"></polyline>
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <div class="mobile-card-actions">
+              <a class="btn-action btn-voir" [routerLink]="['/shop/products', item.id]">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
                 </svg>
+                Voir
+              </a>
+              <a [routerLink]="['/admin/products', item.id]" class="btn-action btn-modifier">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+                Modifier
+              </a>
+              <button (click)="deleteArticle(item.id)" class="btn-action btn-supprimer">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path
+                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                  </path>
+                </svg>
+                Supprimer
+              </button>
             </div>
-            <h3 class="modal-title">Supprimer ce produit ?</h3>
-            <p class="modal-desc">Cette action est irr&eacute;versible. Le produit sera d&eacute;finitivement supprim&eacute; du catalogue.</p>
-            <div class="modal-actions">
-                <button class="modal-btn modal-btn--cancel" (click)="cancelDelete()">Annuler</button>
-                <button class="modal-btn modal-btn--danger" (click)="confirmDelete()">Supprimer</button>
-            </div>
-        </div>
+          </div>
+        }
+      </div>
     </div>
+  }
+
+  <!-- Delete Confirmation Modal -->
+  @if (showDeleteModal) {
+    <div class="modal-overlay" (click)="cancelDelete()">
+      <div class="glass-modal-card" (click)="$event.stopPropagation()">
+        <div class="modal-icon-danger">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          </svg>
+        </div>
+        <h3 class="modal-title">Supprimer ce produit ?</h3>
+        <p class="modal-desc">Cette action est irr&eacute;versible. Le produit sera d&eacute;finitivement supprim&eacute; du catalogue.</p>
+        <div class="modal-actions">
+          <button class="modal-btn modal-btn--cancel" (click)="cancelDelete()">Annuler</button>
+          <button class="modal-btn modal-btn--danger" (click)="confirmDelete()">Supprimer</button>
+        </div>
+      </div>
+    </div>
+  }
 
 </div>

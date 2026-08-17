@@ -1,272 +1,285 @@
 <div class="page-container">
 
-    <div class="header-split reveal">
-        <app-page-header title="Collections" subtitle="Organisation du catalogue."></app-page-header>
+  <div class="header-split reveal">
+    <app-page-header title="Collections" subtitle="Organisation du catalogue."></app-page-header>
 
-        <button (click)="openModal()" class="btn-new-collection">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            Nouvelle Collection
+    <button (click)="openModal()" class="btn-new-collection">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+      Nouvelle Collection
+    </button>
+  </div>
+
+  @if (loading) {
+    <div class="loading-wrapper">
+      <app-loading label="Chargement des collections..."></app-loading>
+    </div>
+  }
+
+  <!-- EMPTY STATE -->
+  @if (!loading && categories.length === 0) {
+    <div class="empty-state-card reveal delay-1">
+      <div class="empty-state-inner">
+        <div class="empty-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+          </svg>
+        </div>
+        <h3 class="empty-title">Aucune collection</h3>
+        <p class="empty-desc">Organisez votre catalogue en cr&eacute;ant des collections pour regrouper vos articles.</p>
+        <button (click)="openModal()" class="btn-create-first">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Cr&eacute;er votre premi&egrave;re cat&eacute;gorie
         </button>
+      </div>
     </div>
+  }
 
-    <div *ngIf="loading" class="loading-wrapper">
-        <app-loading label="Chargement des collections..."></app-loading>
-    </div>
-
-    <!-- EMPTY STATE -->
-    <div class="empty-state-card reveal delay-1" *ngIf="!loading && categories.length === 0">
-        <div class="empty-state-inner">
-            <div class="empty-icon">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-                </svg>
-            </div>
-            <h3 class="empty-title">Aucune collection</h3>
-            <p class="empty-desc">Organisez votre catalogue en cr&eacute;ant des collections pour regrouper vos articles.</p>
-            <button (click)="openModal()" class="btn-create-first">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-                Cr&eacute;er votre premi&egrave;re cat&eacute;gorie
-            </button>
-        </div>
-    </div>
-
-    <!-- TABLE (desktop) -->
-    <div class="glass-table-container reveal delay-1" *ngIf="!loading && categories.length > 0">
-        <table class="editorial-table desktop-table">
-            <thead>
-                <tr>
-                    <th class="th-img">Image</th>
-                    <th class="th-main">D&eacute;signation</th>
-                    <th class="text-center th-count">Articles</th>
-                    <th class="text-center th-status">Statut</th>
-                    <th class="text-right th-actions">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let cat of categories; let i = index" class="table-row"
-                    [style.animation-delay]="(i * 30) + 'ms'">
-
-                    <td class="td-img">
-                        <div class="cat-thumb">
-                            <img *ngIf="getImageUrl(cat)" [src]="getImageUrl(cat)" [alt]="cat.name">
-                            <div *ngIf="!getImageUrl(cat)" class="cat-thumb-empty">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="1.5">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                    <polyline points="21 15 16 10 5 21"></polyline>
-                                </svg>
-                            </div>
-                        </div>
-                    </td>
-
-                    <td class="td-main">
-                        <div class="cat-info">
-                            <span class="cat-name">{{ cat.name }}</span>
-                            <span class="cat-id">#{{ cat.id }}</span>
-                        </div>
-                    </td>
-
-                    <td class="text-center td-count">
-                        <span class="count-pill">{{ cat.articlesCount || 0 }}</span>
-                    </td>
-
-                    <td class="text-center td-status">
-                        <label class="switch" (click)="$event.stopPropagation()">
-                            <input type="checkbox" [checked]="cat.isActive"
-                                (change)="toggleActive(cat.id)">
-                            <span class="switch-track"></span>
-                        </label>
-                        <span class="switch-label" [class.active]="cat.isActive">
-                            {{ cat.isActive ? 'Active' : 'Masqu&eacute;e' }}
-                        </span>
-                    </td>
-
-                    <td class="text-right td-actions">
-                        <div class="actions-flex">
-                            <a class="btn-action btn-voir" routerLink="/shop/catalog"
-                                [queryParams]="{ categoryId: cat.id }" title="Voir dans le catalogue">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                    <circle cx="12" cy="12" r="3"></circle>
-                                </svg>
-                                Voir
-                            </a>
-                            <button (click)="openEditModal(cat)" class="btn-action btn-modifier" title="Modifier">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                </svg>
-                                Modifier
-                            </button>
-                            <button (click)="delete(cat.id)" class="btn-action btn-supprimer" title="Supprimer">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="3 6 5 6 21 6"></polyline>
-                                    <path
-                                        d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
-                                    </path>
-                                </svg>
-                                Supprimer
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- MOBILE CARDS -->
-        <div class="mobile-cards">
-            <div *ngFor="let cat of categories; let i = index" class="mobile-card"
-                [style.animation-delay]="(i * 50) + 'ms'">
-                <div class="mobile-card-top">
-                    <div class="cat-thumb">
-                        <img *ngIf="getImageUrl(cat)" [src]="getImageUrl(cat)" [alt]="cat.name">
-                        <div *ngIf="!getImageUrl(cat)" class="cat-thumb-empty">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="1.5">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                <polyline points="21 15 16 10 5 21"></polyline>
-                            </svg>
-                        </div>
+  <!-- TABLE (desktop) -->
+  @if (!loading && categories.length > 0) {
+    <div class="glass-table-container reveal delay-1">
+      <table class="editorial-table desktop-table">
+        <thead>
+          <tr>
+            <th class="th-img">Image</th>
+            <th class="th-main">D&eacute;signation</th>
+            <th class="text-center th-count">Articles</th>
+            <th class="text-center th-status">Statut</th>
+            <th class="text-right th-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (cat of categories; track cat; let i = $index) {
+            <tr class="table-row"
+              [style.animation-delay]="(i * 30) + 'ms'">
+              <td class="td-img">
+                <div class="cat-thumb">
+                  @if (getImageUrl(cat)) {
+                    <img [src]="getImageUrl(cat)" [alt]="cat.name">
+                  }
+                  @if (!getImageUrl(cat)) {
+                    <div class="cat-thumb-empty">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.5">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                        <polyline points="21 15 16 10 5 21"></polyline>
+                      </svg>
                     </div>
-                    <div class="cat-info">
-                        <span class="cat-name">{{ cat.name }}</span>
-                        <span class="cat-id">#{{ cat.id }} &middot; {{ cat.articlesCount || 0 }} articles</span>
-                    </div>
-                    <label class="switch" (click)="$event.stopPropagation()">
-                        <input type="checkbox" [checked]="cat.isActive"
-                            (change)="toggleActive(cat.id)">
-                        <span class="switch-track"></span>
-                    </label>
+                  }
                 </div>
-                <div class="mobile-card-actions">
-                    <a class="btn-action btn-voir" routerLink="/shop/catalog"
-                        [queryParams]="{ categoryId: cat.id }">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                            <circle cx="12" cy="12" r="3"></circle>
-                        </svg>
-                        Voir
-                    </a>
-                    <button (click)="openEditModal(cat)" class="btn-action btn-modifier">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                        </svg>
-                        Modifier
-                    </button>
-                    <button (click)="delete(cat.id)" class="btn-action btn-supprimer">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="3 6 5 6 21 6"></polyline>
-                            <path
-                                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
-                            </path>
-                        </svg>
-                        Supprimer
-                    </button>
+              </td>
+              <td class="td-main">
+                <div class="cat-info">
+                  <span class="cat-name">{{ cat.name }}</span>
+                  <span class="cat-id">#{{ cat.id }}</span>
                 </div>
+              </td>
+              <td class="text-center td-count">
+                <span class="count-pill">{{ cat.articlesCount || 0 }}</span>
+              </td>
+              <td class="text-center td-status">
+                <label class="switch" (click)="$event.stopPropagation()">
+                  <input type="checkbox" [checked]="cat.isActive"
+                    (change)="toggleActive(cat.id)">
+                  <span class="switch-track"></span>
+                </label>
+                <span class="switch-label" [class.active]="cat.isActive">
+                  {{ cat.isActive ? 'Active' : 'Masqu&eacute;e' }}
+                </span>
+              </td>
+              <td class="text-right td-actions">
+                <div class="actions-flex">
+                  <a class="btn-action btn-voir" routerLink="/shop/catalog"
+                    [queryParams]="{ categoryId: cat.id }" title="Voir dans le catalogue">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    Voir
+                  </a>
+                  <button (click)="openEditModal(cat)" class="btn-action btn-modifier" title="Modifier">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                    Modifier
+                  </button>
+                  <button (click)="delete(cat.id)" class="btn-action btn-supprimer" title="Supprimer">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path
+                        d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                      </path>
+                    </svg>
+                    Supprimer
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      <!-- MOBILE CARDS -->
+      <div class="mobile-cards">
+        @for (cat of categories; track cat; let i = $index) {
+          <div class="mobile-card"
+            [style.animation-delay]="(i * 50) + 'ms'">
+            <div class="mobile-card-top">
+              <div class="cat-thumb">
+                @if (getImageUrl(cat)) {
+                  <img [src]="getImageUrl(cat)" [alt]="cat.name">
+                }
+                @if (!getImageUrl(cat)) {
+                  <div class="cat-thumb-empty">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="1.5">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                      <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                  </div>
+                }
+              </div>
+              <div class="cat-info">
+                <span class="cat-name">{{ cat.name }}</span>
+                <span class="cat-id">#{{ cat.id }} &middot; {{ cat.articlesCount || 0 }} articles</span>
+              </div>
+              <label class="switch" (click)="$event.stopPropagation()">
+                <input type="checkbox" [checked]="cat.isActive"
+                  (change)="toggleActive(cat.id)">
+                <span class="switch-track"></span>
+              </label>
             </div>
-        </div>
+            <div class="mobile-card-actions">
+              <a class="btn-action btn-voir" routerLink="/shop/catalog"
+                [queryParams]="{ categoryId: cat.id }">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                Voir
+              </a>
+              <button (click)="openEditModal(cat)" class="btn-action btn-modifier">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+                Modifier
+              </button>
+              <button (click)="delete(cat.id)" class="btn-action btn-supprimer">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path
+                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                  </path>
+                </svg>
+                Supprimer
+              </button>
+            </div>
+          </div>
+        }
+      </div>
     </div>
+  }
 
 </div>
 
 <!-- CREATE / EDIT MODAL -->
-<div *ngIf="showModal" class="modal-overlay" (click)="showModal = false">
+@if (showModal) {
+  <div class="modal-overlay" (click)="showModal = false">
     <div class="glass-modal-card" (click)="$event.stopPropagation()">
-        <div class="modal-header">
-            <h3>{{ isEdit ? '&Eacute;diter la Collection' : 'Nouvelle Collection' }}</h3>
-            <button class="close-btn" (click)="showModal = false">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-            </button>
-        </div>
-
-        <form [formGroup]="form" (ngSubmit)="submit()">
-            <div class="modal-body">
-
-                <div class="form-group">
-                    <label class="input-label">Nom de la collection</label>
-                    <input formControlName="name" type="text" class="glass-input title-input"
-                        placeholder="Ex: P&acirc;tisseries Fines">
+      <div class="modal-header">
+        <h3>{{ isEdit ? '&Eacute;diter la Collection' : 'Nouvelle Collection' }}</h3>
+        <button class="close-btn" (click)="showModal = false">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="input-label">Nom de la collection</label>
+            <input formControlName="name" type="text" class="glass-input title-input"
+              placeholder="Ex: P&acirc;tisseries Fines">
+          </div>
+          <!-- Image Upload -->
+          <div class="form-group">
+            <label class="input-label">Image de la collection</label>
+            <div class="image-upload-zone">
+              @if (imagePreview || existingImageUrl) {
+                <div class="image-preview-wrapper">
+                  <img [src]="imagePreview || existingImageUrl" alt="Aper&ccedil;u" class="image-preview">
+                  <button type="button" class="remove-img-btn" (click)="clearImage()"
+                    title="Supprimer l'image">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
                 </div>
-
-                <!-- Image Upload -->
-                <div class="form-group">
-                    <label class="input-label">Image de la collection</label>
-
-                    <div class="image-upload-zone">
-                        <div *ngIf="imagePreview || existingImageUrl" class="image-preview-wrapper">
-                            <img [src]="imagePreview || existingImageUrl" alt="Aper&ccedil;u" class="image-preview">
-                            <button type="button" class="remove-img-btn" (click)="clearImage()"
-                                title="Supprimer l'image">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                                </svg>
-                            </button>
-                        </div>
-
-                        <label *ngIf="!imagePreview && !existingImageUrl" class="upload-placeholder"
-                            for="catImageInput">
-                            <div class="upload-icon-circle">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="1.5">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                    <polyline points="21 15 16 10 5 21"></polyline>
-                                </svg>
-                            </div>
-                            <span class="upload-label-text">Cliquer pour ajouter une image</span>
-                            <span class="hint">JPG, PNG ou WebP &mdash; max 5 Mo</span>
-                        </label>
-
-                        <input #catImageInput type="file" id="catImageInput"
-                            accept="image/jpeg,image/png,image/webp"
-                            (change)="onImageSelected($event)" style="display:none">
-
-                        <button *ngIf="imagePreview || existingImageUrl" type="button" class="change-img-btn"
-                            (click)="catImageInput.click()">
-                            Changer l'image
-                        </button>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" (click)="showModal = false" class="btn-cancel">Annuler</button>
-                <button type="submit" [disabled]="form.invalid || submitting" class="btn-submit"
-                    [class.loading]="submitting">
-                    {{ submitting ? 'Enregistrement...' : 'Enregistrer' }}
+              }
+              @if (!imagePreview && !existingImageUrl) {
+                <label class="upload-placeholder"
+                  for="catImageInput">
+                  <div class="upload-icon-circle">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="1.5">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                      <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                  </div>
+                  <span class="upload-label-text">Cliquer pour ajouter une image</span>
+                  <span class="hint">JPG, PNG ou WebP &mdash; max 5 Mo</span>
+                </label>
+              }
+              <input #catImageInput type="file" id="catImageInput"
+                accept="image/jpeg,image/png,image/webp"
+                (change)="onImageSelected($event)" style="display:none">
+              @if (imagePreview || existingImageUrl) {
+                <button type="button" class="change-img-btn"
+                  (click)="catImageInput.click()">
+                  Changer l'image
                 </button>
+              }
             </div>
-        </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" (click)="showModal = false" class="btn-cancel">Annuler</button>
+          <button type="submit" [disabled]="form.invalid || submitting" class="btn-submit"
+            [class.loading]="submitting">
+            {{ submitting ? 'Enregistrement...' : 'Enregistrer' }}
+          </button>
+        </div>
+      </form>
     </div>
-</div>
+  </div>
+}
 
-<app-confirmation-modal *ngIf="showDeleteModal" title="Supprimer la collection ?"
+@if (showDeleteModal) {
+  <app-confirmation-modal title="Supprimer la collection ?"
     message="Cette action est irr&eacute;versible. Les articles li&eacute;s ne seront pas supprim&eacute;s mais n'auront plus de cat&eacute;gorie."
     confirmText="Supprimer" cancelText="Annuler" [isDestructive]="true" (confirm)="confirmDelete()"
     (cancel)="cancelDelete()">
-</app-confirmation-modal>
+  </app-confirmation-modal>
+}
