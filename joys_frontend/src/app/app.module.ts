@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -53,39 +53,30 @@ import { CategoryListComponent } from './pages/admin/categories/category-list/ca
 import { ForbiddenComponent } from './pages/misc/forbidden.component';
 import { NotFoundComponent } from './pages/misc/not-found.component';
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    ShellComponent, NavbarComponent, FooterComponent, AdminLayoutComponent,
-    PageHeaderComponent, LoadingComponent, EmptyStateComponent,
-
-    // Pages
-    HomeComponent, CatalogComponent, ArticleDetailsComponent,
-    LoginComponent, RegisterComponent,
-    CartComponent, CheckoutComponent, OrdersComponent, ProfileComponent,
-    ClientReclamationListComponent, ClientReclamationCreateComponent, ClientOrderDetailComponent,
-
-    DashboardComponent, ProductListComponent, ProductEditComponent,
-    OrderListComponent, OrderDetailComponent, StockComponent,
-    ReclamationListComponent, ReclamationDetailComponent, CategoryListComponent,
-
-    ForbiddenComponent, NotFoundComponent,
-    FileUrlPipe,
-    PremiumImgPipe,
-    ConfirmationModalComponent,
-    ProductCardComponent
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    FormsModule,
-    AppRoutingModule
-  ],
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
-  ],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        ShellComponent, NavbarComponent, FooterComponent, AdminLayoutComponent,
+        PageHeaderComponent, LoadingComponent, EmptyStateComponent,
+        // Pages
+        HomeComponent, CatalogComponent, ArticleDetailsComponent,
+        LoginComponent, RegisterComponent,
+        CartComponent, CheckoutComponent, OrdersComponent, ProfileComponent,
+        ClientReclamationListComponent, ClientReclamationCreateComponent, ClientOrderDetailComponent,
+        DashboardComponent, ProductListComponent, ProductEditComponent,
+        OrderListComponent, OrderDetailComponent, StockComponent,
+        ReclamationListComponent, ReclamationDetailComponent, CategoryListComponent,
+        ForbiddenComponent, NotFoundComponent,
+        FileUrlPipe,
+        PremiumImgPipe,
+        ConfirmationModalComponent,
+        ProductCardComponent
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        BrowserAnimationsModule,
+        ReactiveFormsModule,
+        FormsModule,
+        AppRoutingModule], providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class AppModule { }
